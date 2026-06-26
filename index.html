@@ -1,220 +1,1065 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIMOBIL64 - Showroom System</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #0b0c10;
-            color: #f3f4f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: radial-gradient(circle at top right, rgba(44, 22, 74, 0.25), transparent 600px);
-        }
-        .glass-card {
-            background: rgba(17, 20, 28, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .diecast-card {
-            background: linear-gradient(145deg, rgba(15, 18, 26, 0.95), rgba(22, 27, 38, 0.95));
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .diecast-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(234, 179, 8, 0.3);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIMOBIL64 - Premium Diecast Showroom</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg-dark: #050814; --bg-card: rgba(13, 20, 38, 0.45); --bg-card-hover: rgba(22, 32, 60, 0.7); --border-color: rgba(255, 255, 255, 0.08); --border-hover: rgba(255, 255, 255, 0.2); --text-primary: #f8fafc; --text-secondary: #94a3b8; --text-muted: #627288; --accent-blue: #3b82f6; --accent-blue-glow: rgba(59, 130, 246, 0.2); --status-collection: #10b981; --status-collection-glow: rgba(16, 185, 129, 0.15); --status-bucket: #06b6d4; --status-bucket-glow: rgba(6, 182, 212, 0.15); --status-booked: #f59e0b; --status-booked-glow: rgba(245, 158, 11, 0.15); --status-sold: #ef4444; --status-sold-glow: rgba(239, 68, 68, 0.15); --accent-pink: #ec4899; --accent-pink-glow: rgba(236, 72, 153, 0.25); --accent-gold: #facc15; --accent-gold-glow: rgba(250, 204, 21, 0.25); --font-main: 'Outfit', sans-serif; --font-title: 'Space Grotesk', sans-serif; --font-ui: 'Plus Jakarta Sans', sans-serif; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); --blur: blur(12px); }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+    body { background-color: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; position: relative; }
+    .glow-orbs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.1; transition: var(--transition); }
+    .orb-1 { width: 600px; height: 600px; background: var(--accent-blue); top: -200px; left: -150px; animation: float 25s infinite ease-in-out alternate; }
+    .orb-2 { width: 600px; height: 600px; background: var(--accent-pink); bottom: -200px; right: -150px; animation: float 30s infinite ease-in-out alternate-reverse; }
+    .orb-3 { width: 500px; height: 500px; background: var(--status-collection); top: 35%; left: 45%; opacity: 0.04; }
+    @keyframes float { 0% { transform: translateY(0) scale(1) rotate(0deg); } 100% { transform: translateY(70px) scale(1.15) rotate(15deg); } }
+    header { background: rgba(5, 8, 20, 0.7); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .header-container { max-width: 1280px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo-area { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .logo-img { height: 38px; width: auto; object-fit: contain; border-radius: 8px; }
+    .logo-icon { font-size: 2rem; animation: spin-slow 20s infinite linear; }
+    @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+    .logo-text { font-family: var(--font-title); font-weight: 700; font-size: 1.6rem; background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+    .profile-badge { display: flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 0.4rem 1rem 0.4rem 0.5rem; border-radius: 50px; cursor: pointer; transition: var(--transition); }
+    .profile-badge:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-hover); transform: translateY(-1px); }
+    .profile-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.2); background: #111827; }
+    .profile-info { display: flex; flex-direction: column; }
+    .profile-name { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 700; color: var(--text-primary); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-status { font-size: 0.65rem; color: var(--text-secondary); font-weight: 500; }
+    main { max-width: 1280px; margin: 0 auto; padding: 2rem; flex-grow: 1; width: 100%; }
+    .hero-banner { text-align: center; margin-bottom: 2.5rem; position: relative; }
+    .hero-banner h1 { font-family: var(--font-title); font-size: 3.2rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-banner p { color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin: 0 auto; line-height: 1.5; }
+    .analytics-dashboard { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    @media (min-width: 640px) { .analytics-dashboard { grid-template-columns: repeat(3, 1fr); } }
+    .analytics-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); position: relative; overflow: hidden; transition: var(--transition); }
+    .analytics-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(to right, transparent, var(--card-glow, var(--accent-blue)), transparent); }
+    .analytics-card:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+    .analytics-label { font-family: var(--font-ui); font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .analytics-value { font-family: var(--font-title); font-size: 1.8rem; font-weight: 700; color: var(--text-primary); }
+    .analytics-desc { font-size: 0.75rem; color: var(--text-secondary); }
+    .controls-panel { background: rgba(13, 20, 38, 0.3); border: 1px solid var(--border-color); border-radius: 20px; padding: 1.5rem; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+    .controls-top { display: flex; flex-direction: column; gap: 1rem; }
+    @media (min-width: 768px) { .controls-top { flex-direction: row; align-items: center; justify-content: space-between; } }
+    .search-wrapper { position: relative; flex-grow: 1; max-width: 500px; width: 100%; }
+    .search-input { width: 100%; background: rgba(5, 8, 20, 0.6); border: 1px solid var(--border-color); padding: 0.8rem 1rem 0.8rem 2.8rem; border-radius: 12px; color: var(--text-primary); font-size: 0.95rem; transition: var(--transition); }
+    .search-input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px var(--accent-blue-glow); }
+    .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); fill: var(--text-muted); width: 18px; height: 18px; pointer-events: none; transition: var(--transition); }
+    .search-input:focus + .search-icon { fill: var(--accent-blue); }
+    .controls-actions { display: flex; gap: 0.75rem; align-items: center; }
+    .filter-panel { display: flex; flex-direction: column; gap: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.25rem; }
+    .filter-section-title { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .filter-container { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .filter-btn { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition); }
+    .filter-btn:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--border-hover); color: var(--text-primary); }
+    .filter-btn.active { background: var(--text-primary); border-color: var(--text-primary); color: var(--bg-dark); }
+    .filter-btn.active .filter-count { background: rgba(0, 0, 0, 0.12); color: inherit; }
+    .filter-count { font-size: 0.7rem; background: rgba(255, 255, 255, 0.06); padding: 0.1rem 0.4rem; border-radius: 20px; color: var(--text-secondary); font-weight: 700; transition: var(--transition); }
+    .filter-btn-add { border: 1px dashed rgba(255, 255, 255, 0.2); background: transparent; color: var(--text-muted); padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: var(--transition); }
+    .filter-btn-add:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-glow); }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition); border: 1px solid transparent; white-space: nowrap; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-blue), #2563eb); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5); }
+    .btn-secondary { background: rgba(255, 255, 255, 0.03); border-color: var(--border-color); color: var(--text-primary); }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-hover); }
+    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; transition: var(--transition); }
+    @media (min-width: 640px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .cards-grid { grid-template-columns: repeat(3, 1fr); } }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); transition: var(--transition); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); cursor: pointer; }
+    .card.pinned-card { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(250, 204, 21, 0.2), 0 4px 20px rgba(0, 0, 0, 0.25); }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px; padding: 1px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+    .card:hover { transform: translateY(-6px); background: var(--bg-card-hover); border-color: var(--card-border-glow, var(--border-hover)); box-shadow: 0 12px 30px var(--card-shadow-glow, rgba(0, 0, 0, 0.3)); }
+    .card-image-wrapper { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #090e1a; display: flex; align-items: center; justify-content: center; }
+    .card-gallery { width: 100%; height: 100%; background-size: cover; background-position: center; background-repeat: no-repeat; transition: var(--transition); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .card-img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .card:hover .card-img { transform: scale(1.05); }
+    .card-image-glow { position: absolute; bottom: 0; left: 0; width: 100%; height: 35%; background: linear-gradient(to top, var(--card-badge-color, rgba(59, 130, 246, 0.15)), transparent); opacity: 0.6; pointer-events: none; }
+    .card-status-badge { position: absolute; top: 1rem; right: 1rem; padding: 0.35rem 0.8rem; border-radius: 30px; font-family: var(--font-ui); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; gap: 0.35rem; z-index: 4; }
+    .card-status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .card-status-badge.collection { background-color: var(--status-collection-glow); color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+    .card-status-badge.bucket-lists { background-color: var(--status-bucket-glow); color: #22d3ee; border-color: rgba(34, 211, 238, 0.3); }
+    .card-status-badge.booked { background-color: var(--status-booked-glow); color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+    .card-status-badge.sold { background-color: var(--status-sold-glow); color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+    .card-top-controls { position: absolute; top: 1rem; left: 1rem; display: flex; gap: 0.4rem; z-index: 5; }
+    .card-badge-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(5, 8, 20, 0.7); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); color: var(--text-muted); }
+    .card-badge-btn:hover { background: rgba(5, 8, 20, 0.95); transform: scale(1.1); border-color: var(--border-hover); }
+    .card-badge-btn.active-love { color: #f43f5e !important; border-color: rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.15); text-shadow: 0 0 5px rgba(244, 63, 94, 0.6); }
+    .card-badge-btn.active-pin { color: var(--accent-gold) !important; border-color: rgba(250, 204, 21, 0.4); background: rgba(250, 204, 21, 0.15); }
+    .card-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .card-tag { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); padding: 0.15rem 0.55rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); }
+    .card-tag.custom-tag-badge { border-color: rgba(147, 51, 234, 0.4); color: #c084fc; background: rgba(147, 51, 234, 0.08); }
+    .card-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; line-height: 1.3; margin-bottom: 1rem; color: var(--text-primary); transition: var(--transition); }
+    .card:hover .card-title { color: white; }
+    .card-details { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1rem; margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .detail-group { display: flex; flex-direction: column; }
+    .detail-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+    .detail-value { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .detail-value.financial-value { color: var(--text-primary); }
+    .card-actions { position: absolute; bottom: 1rem; right: 1.25rem; display: flex; gap: 0.4rem; opacity: 0; transform: translateY(5px); transition: var(--transition); z-index: 5; }
+    .card:hover .card-actions { opacity: 1; transform: translateY(0); }
+    .action-icon-btn { background: rgba(5, 8, 20, 0.8); border: 1px solid var(--border-color); color: var(--text-secondary); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+    .action-icon-btn:hover { transform: scale(1.1); }
+    .action-icon-btn.btn-edit:hover { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); border-color: rgba(59, 130, 246, 0.4); }
+    .action-icon-btn.btn-delete:hover { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); }
+    .utilities-hub { margin-top: 4rem; background: rgba(13, 20, 38, 0.25); border: 1px solid var(--border-color); border-radius: 20px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+    @media (min-width: 768px) { .utilities-hub { flex-direction: row; justify-content: space-between; align-items: center; } }
+    .utility-desc { display: flex; flex-direction: column; gap: 0.25rem; }
+    .utility-title { font-family: var(--font-title); font-size: 1.1rem; font-weight: 700; }
+    .utility-subtitle { font-size: 0.8rem; color: var(--text-secondary); }
+    .utility-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .hidden-file-input { display: none; }
+    .currency-toggle-wrapper { display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 0.35rem 0.75rem; border-radius: 10px; }
+    .currency-toggle-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+    .switch { position: relative; display: inline-block; width: 38px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.1); transition: .3s; border-radius: 34px; border: 1px solid var(--border-color); }
+    .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: var(--text-primary); transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--accent-blue); }
+    input:checked + .slider:before { transform: translateX(18px); }
+    .empty-state { text-align: center; padding: 5rem 2rem; background: rgba(13, 20, 38, 0.15); border: 1px dashed var(--border-color); border-radius: 20px; display: none; flex-direction: column; align-items: center; gap: 1rem; }
+    .empty-icon { font-size: 3rem; opacity: 0.5; }
+    .empty-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; }
+    .empty-desc { color: var(--text-secondary); font-size: 0.9rem; max-width: 340px; line-height: 1.5; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: center; align-items: center; z-index: 200; opacity: 0; pointer-events: none; transition: var(--transition); padding: 1.5rem; overflow-y: auto; }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-container { background: #0a0e1c; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); overflow: hidden; transform: scale(0.95); transition: var(--transition); display: flex; flex-direction: column; max-height: 90vh; margin: auto; }
+    .modal-overlay.active .modal-container { transform: scale(1); }
+    .modal-container > form { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.01); flex-shrink: 0; }
+    .modal-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; }
+    .modal-close { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.6rem; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; transition: var(--transition); }
+    .modal-close:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+    .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; min-height: 0; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-control { width: 100%; background: rgba(5, 8, 20, 0.6); border: 1px solid var(--border-color); padding: 0.8rem 1rem; border-radius: 10px; color: var(--text-primary); font-size: 0.95rem; transition: var(--transition); }
+    .form-control:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px var(--accent-blue-glow); }
+    select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+    .multi-image-container { border: 1.5px dashed var(--border-color); border-radius: 12px; padding: 1rem; background: rgba(5, 8, 20, 0.25); display: flex; flex-direction: column; gap: 1rem; }
+    .multi-image-inputs { display: flex; flex-direction: column; gap: 0.5rem; }
+    .image-preview-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 0; scrollbar-width: thin; }
+    .preview-thumb-box { position: relative; width: 80px; height: 60px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); flex-shrink: 0; transition: var(--transition); }
+    .preview-thumb-img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-thumb-remove { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 6; }
+    .detail-container { max-width: 800px; }
+    .slider-wrapper { position: relative; aspect-ratio: 16/9; width: 100%; background: #03060d; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); }
+    .slider-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .slider-img.active { display: block; }
+    .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(5, 8, 20, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); color: white; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); user-select: none; z-index: 10; }
+    .slider-arrow:hover { background: rgba(5, 8, 20, 0.9); scale: 1.05; }
+    .slider-arrow-left { left: 1rem; }
+    .slider-arrow-right { right: 1rem; }
+    .thumbnails-strip { display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto; padding: 0.25rem 0; }
+    .thumb-box { width: 60px; height: 45px; border-radius: 6px; overflow: hidden; cursor: pointer; border: 2px solid transparent; opacity: 0.6; transition: var(--transition); flex-shrink: 0; }
+    .thumb-box.active { border-color: var(--accent-blue); opacity: 1; transform: scale(1.05); }
+    .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+    .spec-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem; }
+    .spec-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+    .spec-value { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+    .spec-value.highlighted-status { display: inline-block; width: fit-content; padding: 0.15rem 0.5rem; border-radius: 20px; font-size: 0.75rem; text-transform: uppercase; }
+    .spec-value.status-collection { background: var(--status-collection-glow); color: #34d399; }
+    .spec-value.status-bucket { background: var(--status-bucket-glow); color: #22d3ee; }
+    .spec-value.status-booked { background: var(--status-booked-glow); color: #fbbf24; }
+    .spec-value.status-sold { background: var(--status-sold-glow); color: #f87171; }
+    .form-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.75rem; background: rgba(255, 255, 255, 0.01); flex-shrink: 0; }
+    .tags-checkbox-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .tag-checkbox-item { position: relative; }
+    .tag-checkbox-item input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+    .tag-checkbox-label { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: inline-block; transition: var(--transition); font-weight: 600; }
+    .tag-checkbox-item input:checked + .tag-checkbox-label { background: rgba(147, 51, 234, 0.15); border-color: rgba(147, 51, 234, 0.4); color: #c084fc; }
+    footer { border-top: 1px solid var(--border-color); padding: 2.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: auto; background: rgba(3, 5, 12, 0.2); }
+    .footer-logo { font-family: var(--font-title); font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 1.1rem; }
+  </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen">
+<body>
+  <div class="glow-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
 
-    <header class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 glass-card p-5 rounded-2xl shadow-2xl border border-gray-800/40">
-        <div class="flex items-center gap-4">
-            <div id="logo-wrapper" class="w-12 h-12 flex items-center justify-center bg-yellow-500/10 rounded-2xl border border-yellow-500/20 shadow-inner">
-                <img id="app-logo" src="images/logo.png" alt="Logo" class="w-8 h-8 object-contain" onerror="document.getElementById('logo-wrapper').innerHTML='🏎️'">
-            </div>
-            <div>
-                <h1 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-indigo-400">BIMOBIL 64</h1>
-                <p class="text-xs text-gray-400 font-medium tracking-wide">Ultimate 1:64 Collector Showroom</p>
-            </div>
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo-area">
+        <img class="logo-img" src="images/logo.png" alt="Logo BiMobil 64" onload="this.style.display='inline-block'; document.getElementById('logo-fallback').style.display='none';" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline';" style="display: none;">
+        <span id="logo-fallback" class="logo-icon">🏎️</span>
+        <span class="logo-text">BIMOBIL64</span>
+      </a>
+      <div class="profile-badge" id="profile-badge-btn" title="Edit Profile Details">
+        <img class="profile-avatar" id="nav-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80" alt="Collector Avatar">
+        <div class="profile-info">
+          <span class="profile-name" id="nav-username">Bimo Purwanto</span>
+          <span class="profile-status" id="nav-title">Ultimate Collector</span>
         </div>
-        
-        <div class="flex items-center gap-3 bg-gray-900/60 p-2 pr-4 rounded-xl border border-gray-800/80 shadow-md">
-            <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-yellow-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow">BP</div>
-            <div class="text-left">
-                <h4 class="text-xs font-bold text-gray-200">Bimo Purwanto</h4>
-                <p class="text-[10px] text-gray-400 font-semibold tracking-tight">Ultimate 1:64 Collector</p>
-            </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-banner">
+      <h1 id="hero-title">BIMOBIL64</h1>
+      <p id="hero-subtitle">Premium 1:64 Scale Diecast Showroom & Collection Tracker</p>
+    </section>
+
+    <section class="analytics-dashboard">
+      <div class="analytics-card" style="--card-glow: var(--status-collection);">
+        <span class="analytics-label">Total Value</span>
+        <div class="analytics-value" id="stat-total-value">0</div>
+        <span class="analytics-desc">Estimated full portfolio market price valuation</span>
+      </div>
+      <div class="analytics-card" style="--card-glow: var(--accent-pink);">
+        <span class="analytics-label">Showroom Items</span>
+        <div class="analytics-value" id="stat-total-count">0</div>
+        <span class="analytics-desc">Active items recorded across all collection categories</span>
+      </div>
+      <div class="analytics-card" style="--card-glow: var(--status-bucket);">
+        <span class="analytics-label">Pinned / Premium</span>
+        <div class="analytics-value" id="stat-pinned-count">0</div>
+        <span class="analytics-desc">High priority diecast models highlighted on display</span>
+      </div>
+    </section>
+
+    <section class="controls-panel">
+      <div class="controls-top">
+        <div class="search-wrapper">
+          <input type="text" class="search-input" id="search-input-field" placeholder="Search models, manufacturers, segments...">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         </div>
-    </header>
-
-    <main class="max-w-6xl mx-auto">
-        <section class="glass-card p-6 rounded-2xl border border-gray-800/40 shadow-xl mb-10">
-            <div class="flex justify-between items-center mb-5 border-b border-gray-800/60 pb-3">
-                <h2 class="text-sm font-black text-yellow-400 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-circle-plus"></i> Add New Collection</h2>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse">LIVE STORAGE</span>
-            </div>
-            <form id="diecast-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Model Name</label>
-                    <input type="text" id="name" placeholder="e.g. Nissan Skyline GT-R BNR34" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all" required>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Manufacturer</label>
-                    <input type="text" id="manufacturer" placeholder="e.g. Hot Wheels, Tomica" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all">
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Market Valuation</label>
-                    <div class="flex gap-2">
-                        <input type="number" step="0.01" id="market_value" placeholder="Value" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all w-full">
-                        <select id="currency" class="bg-gray-950 border border-gray-800 rounded-xl px-3 py-3 text-sm focus:outline-none text-gray-300 font-bold">
-                            <option value="USD">USD ($)</option>
-                            <option value="IDR">IDR (Rp)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-1.5 md:col-span-2">
-                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Tags / Categories</label>
-                    <input type="text" id="tags" placeholder="e.g. JDM, Premium, Fast & Furious (separate with comma)" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all">
-                </div>
-                <div class="flex flex-col justify-end">
-                    <button type="submit" class="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 font-black text-xs uppercase tracking-widest text-gray-950 rounded-xl py-3.5 transition-all shadow-lg shadow-yellow-500/10">
-                        Commit To Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
-            <div>
-                <h2 class="text-lg font-black tracking-tight flex items-center gap-2 text-white">
-                    <i class="fa-solid fa-table-cells-large text-yellow-500"></i> CURRENT SHOWROOM
-                </h2>
-            </div>
-            <div class="flex items-center gap-3">
-                <span id="counter" class="text-xs font-black bg-gray-900 px-4 py-2 rounded-xl text-yellow-400 border border-gray-800 shadow">0 ITEMS COLLECTED</span>
-            </div>
+        <div class="controls-actions">
+          <button class="btn btn-primary" id="btn-trigger-add-modal">
+            <span>+ Add Diecast</span>
+          </button>
         </div>
-        
-        <div id="showroom" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      </div>
+
+      <div class="filter-panel">
+        <span class="filter-section-title">Filter by Category status</span>
+        <div class="filter-container" id="filter-buttons-group">
+          <button class="filter-btn active" data-filter="all">All <span class="filter-count" id="count-all">0</span></button>
+          <button class="filter-btn" data-filter="collection">Collection <span class="filter-count" id="count-collection">0</span></button>
+          <button class="filter-btn" data-filter="bucket-lists">Bucket Lists <span class="filter-count" id="count-bucket">0</span></button>
+          <button class="filter-btn" data-filter="booked">Booked <span class="filter-count" id="count-booked">0</span></button>
+          <button class="filter-btn" data-filter="sold">Sold <span class="filter-count" id="count-sold">0</span></button>
+        </div>
+      </div>
+    </section>
+
+    <div class="empty-state" id="empty-state-placeholder">
+      <div class="empty-icon">🏎️</div>
+      <h3 class="empty-title">No diecasts match selection</h3>
+      <p class="empty-desc">Try modifying your search keywords, clear filter tags, or add a brand new item registry.</p>
+    </div>
+
+    <section class="cards-grid" id="diecast-cards-showcase-grid">
+      </section>
+
+    <section class="utilities-hub">
+      <div class="utility-desc">
+        <h3 class="utility-title">Data Administration</h3>
+        <p class="utility-subtitle">Backup, restore registry files or globally switch presentation currencies</p>
+      </div>
+      <div class="utility-buttons">
+        <div class="currency-toggle-wrapper">
+          <span class="currency-toggle-label">USD ($)</span>
+          <label class="switch">
+            <input type="checkbox" id="currency-global-toggle" checked>
+            <span class="slider"></span>
+          </label>
+          <span class="currency-toggle-label">IDR (Rp)</span>
+        </div>
+        <button class="btn btn-secondary" id="btn-export-json-file" title="Save backup snapshot locally">
+          <span>📤 Export Data</span>
+        </button>
+        <button class="btn btn-secondary" id="btn-trigger-import-click" title="Load backup file snapshot">
+          <span>📥 Import Data</span>
+        </button>
+        <input type="file" id="import-hidden-file-input" class="hidden-file-input" accept=".json">
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-logo">BIMOBIL64</div>
+    <p>© 2026 Premium Diecast Vault. Engine synced securely with live databases.</p>
+  </footer>
+
+  <div class="modal-overlay" id="modal-diecast-form-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="form-modal-title-heading">Add New Diecast</h3>
+        <button class="modal-close" onclick="closeFormModal()">&times;</button>
+      </div>
+      <form id="diecast-registry-html-form" onsubmit="handleFormSubmission(event)">
+        <input type="hidden" id="form-field-car-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Model Car Name *</label>
+            <input type="text" id="field-car-name" class="form-control" placeholder="e.g., Nissan Skyline GT-R R34 Nismo R-Tune" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Brand / Manufacturer *</label>
+              <input type="text" id="field-car-brand" class="form-control" placeholder="e.g., Mini GT, Hot Wheels, Inno64" required>
             </div>
-    </main>
+            <div class="form-group">
+              <label class="form-label">Segment / Series</label>
+              <input type="text" id="field-car-segment" class="form-control" placeholder="e.g., Kaido House, Pop Race, Pop Culture">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Market Value Price</label>
+              <input type="number" step="0.01" id="field-car-price" class="form-control" placeholder="0.00">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status Classification</label>
+              <select id="field-car-status" class="form-control">
+                <option value="collection">Collection</option>
+                <option value="bucket-lists">Bucket Lists</option>
+                <option value="booked">Booked</option>
+                <option value="sold">Sold</option>
+              </select>
+            </div>
+          </div>
 
-    <script>
-        // KONEKSI INTI DATABASE ONLINE SUPABASE KAMU
-        const SUPABASE_URL = "https://ciutjrhqioxogvkiaujg.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpdXRqcmhxaW94b2d2a2lhdWpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0NjE1OTksImV4cCI6MjA5ODAzNzU5OX0.UppRTLC78Hog9YShU0OrcCYh28kG2pVC0xLEmnVkQIs";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+          <div class="form-group">
+            <label class="form-label">Image Gallery Link URLs (Multi-Image)</label>
+            <div class="multi-image-container">
+              <div class="multi-image-inputs" id="multi-image-inputs-stack">
+                <input type="url" class="form-control image-url-input-item" placeholder="https://example.com/image1.jpg">
+              </div>
+              <button type="button" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; width: fit-content;" onclick="appendImageUrlInputField('')">
+                + Add Another Image URL Link
+              </button>
+              <div class="image-preview-strip" id="form-image-preview-strip-row"></div>
+            </div>
+          </div>
 
-        const form = document.getElementById('diecast-form');
-        const showroom = document.getElementById('showroom');
-        const counter = document.getElementById('counter');
+          <div class="form-group">
+            <label class="form-label">Custom Descriptor Tags Labels</label>
+            <div class="tags-checkbox-container" id="tags-checkbox-selection-pool">
+              <div class="tag-checkbox-item">
+                <input type="checkbox" id="tag-jdm" value="JDM">
+                <label for="tag-jdm" class="tag-checkbox-label">JDM</label>
+              </div>
+              <div class="tag-checkbox-item">
+                <input type="checkbox" id="tag-exotic" value="Exotic">
+                <label for="tag-exotic" class="tag-checkbox-label">Exotic</label>
+              </div>
+              <div class="tag-checkbox-item">
+                <input type="checkbox" id="tag-chase" value="Chase / STH">
+                <label for="tag-chase" class="tag-checkbox-label">Chase / STH</label>
+              </div>
+              <div class="tag-checkbox-item">
+                <input type="checkbox" id="tag-vintage" value="Vintage">
+                <label for="tag-vintage" class="tag-checkbox-label">Vintage</label>
+              </div>
+              <div class="tag-checkbox-item">
+                <input type="checkbox" id="tag-limed" value="Limited Ed.">
+                <label for="tag-limed" class="tag-checkbox-label">Limited Ed.</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeFormModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-form-modal-save-action">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-        // LOAD DATA DARI CLOUD SUPABASE
-        async function fetchLiveShowroom() {
-            showroom.innerHTML = `
-                <div class="col-span-full text-center text-gray-500 text-xs py-16 font-bold tracking-widest uppercase">
-                    <i class="fa-solid fa-spinner animate-spin text-2xl mb-3 text-yellow-500"></i><br>Syncing with database cloud...
-                </div>`;
-            
-            const { data, error } = await supabase
-                .from('diecasts')
-                .select('*')
-                .order('created_at', { ascending: false });
+  <div class="modal-overlay" id="modal-view-details-overlay" onclick="closeDetailsModal(event)">
+    <div class="modal-container detail-container" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title" id="detail-title-heading">Model Car Detailed Visualizer</h3>
+        <button class="modal-close" onclick="closeDetailsModal(event)">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="slider-wrapper" id="detail-slider-wrapper-frame">
+          </div>
+        <div class="thumbnails-strip" id="detail-thumbnails-strip-row"></div>
 
-            if (error) {
-                showroom.innerHTML = `<div class="col-span-full text-center text-red-400 text-sm py-12">Database authentication error.</div>`;
-                return;
-            }
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Manufacturer Brand</span>
+            <span class="spec-value" id="detail-val-brand">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Series Segment</span>
+            <span class="spec-value" id="detail-val-segment">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Current Status</span>
+            <span class="spec-value highlighted-status" id="detail-val-status">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Market Evaluation Value</span>
+            <span class="spec-value" id="detail-val-price">-</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeDetailsModal(event)">Dismiss View</button>
+      </div>
+    </div>
+  </div>
 
-            counter.innerText = `${data.length} ITEMS COLLECTED`;
-            if (data.length === 0) {
-                showroom.innerHTML = `
-                    <div class="col-span-full text-center text-gray-600 text-xs py-16 font-bold border border-dashed border-gray-800 rounded-2xl bg-gray-900/10">
-                        SHOWROOM IS EMPTY.<br>ADD YOUR FIRST DIECAST ABOVE TO INITIATE CLOUD BACKUP.
-                    </div>`;
-                return;
-            }
+  <div class="modal-overlay" id="modal-profile-edit-overlay">
+    <div class="modal-container" style="max-width: 450px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Collector Profile Details</h3>
+        <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+      </div>
+      <form id="profile-editor-html-form" onsubmit="handleProfileFormSave(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Collector Username</label>
+            <input type="text" id="profile-input-username" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Custom Rank Title Badge</label>
+            <input type="text" id="profile-input-title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avatar Image URL</label>
+            <input type="url" id="profile-input-avatar" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Main Brand Header Display Title</label>
+            <input type="text" id="profile-input-hero-title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Branding Subtitle Tagline text</label>
+            <input type="text" id="profile-input-hero-subtitle" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeProfileModal()">Discard</button>
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-            showroom.innerHTML = '';
-            data.forEach(item => {
-                // Generate Tag Badges Sesuai Desain Warna Ungu-Pink Kamu Yang Lama
-                const tagBadges = item.tags ? item.tags.map(t => {
-                    if(!t.trim()) return '';
-                    return `<span class="bg-indigo-950/50 text-indigo-300 text-[9px] px-2 py-0.5 rounded-md font-bold border border-indigo-500/10 uppercase tracking-wide">#${t.trim()}</span>`;
-                }).join(' ') : '';
-                
-                const hargaFormatted = item.market_value ? (item.currency === 'IDR' ? 'Rp ' + Number(item.market_value).toLocaleString('id-ID') : '$' + Number(item.market_value).toFixed(2)) : '$0.00';
+  <script>
+    // KONEKSI DATABASE ONLINE SUPABASE (CLOUD VAULT)
+    const SUPABASE_URL = "https://ciutjrhqioxogvkiaujg.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpdXRqcmhxaW94b2d2a2lhdWpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0NjE1OTksImV4cCI6MjA5ODAzNzU5OX0.UppRTLC78Hog9YShU0OrcCYh28kG2pVC0xLEmnVkQIs";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-                const card = document.createElement('div');
-                card.className = 'diecast-card p-5 rounded-2xl relative flex flex-col justify-between group shadow-xl';
-                
-                // Card Tampilan Mewah Sesuai Screenshot Asli Kamu
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] font-black text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-500/20 tracking-wider uppercase">
-                                <i class="fa-solid fa-circle text-[6px] mr-1.5 align-middle animate-pulse"></i>Collection
-                            </span>
-                            <div class="flex gap-2 items-center">
-                                <button onclick="deleteItem(${item.id})" class="text-gray-700 hover:text-red-400 text-xs transition-all opacity-0 group-hover:opacity-100 p-1"><i class="fa-solid fa-trash-can"></i></button>
-                                <span class="text-pink-500 text-xs"><i class="fa-solid fa-heart"></i></span>
-                                <span class="text-yellow-500 text-xs"><i class="fa-solid fa-thumbtack"></i></span>
-                            </div>
-                        </div>
-                        <h3 class="text-base font-black tracking-tight text-white mb-1 group-hover:text-yellow-400 transition-colors">${item.name}</h3>
-                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-4">${item.manufacturer || 'Unknown Manufacturer'}</p>
-                        <div class="flex flex-wrap gap-1.5 mb-4">${tagBadges}</div>
-                    </div>
-                    <div class="border-t border-gray-800/80 pt-4 mt-2 flex justify-between items-center">
-                        <span class="text-[9px] uppercase tracking-widest text-gray-500 font-extrabold">Market Value</span>
-                        <span class="text-sm font-black text-gray-200 font-mono tracking-tight">${hargaFormatted}</span>
-                    </div>
-                `;
-                showroom.appendChild(card);
-            });
-        }
+    // Dynamic Variables Array Repositories state management
+    let diecastShowroomDataList = [];
+    let currentActiveFilterContextTag = "all";
+    let searchKeywordQueryString = "";
+    let globalActiveCurrencyCode = "IDR";
+    let currentDetailsSliderActiveImageIdx = 0;
 
-        // INPUT DATA KE SUPABASE
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const manufacturer = document.getElementById('manufacturer').value;
-            const market_value = document.getElementById('market_value').value;
-            const currency = document.getElementById('currency').value;
-            const tagsInput = document.getElementById('tags').value;
-            
-            // Pecah string tags berdasarkan koma
-            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()) : [];
+    // DOM Target Elements Nodes selectors definitions
+    const diecastGrid = document.getElementById("diecast-cards-showcase-grid");
+    const emptyStatePlaceholder = document.getElementById("empty-state-placeholder");
+    const currencyToggleInput = document.getElementById("currency-global-toggle");
 
-            const { error } = await supabase.from('diecasts').insert([
-                { name, manufacturer, market_value: market_value ? parseFloat(market_value) : null, currency, tags }
-            ]);
+    // Profile State Schema Definitions & Handlers
+    let userCollectorProfileSchemaObject = {
+      username: "Bimo Purwanto",
+      title: "Ultimate Collector",
+      avatarUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80",
+      showroomHeaderTitle: "BIMOBIL64",
+      showroomHeaderSubtitle: "Premium 1:64 Scale Diecast Showroom & Collection Tracker"
+    };
 
-            if (error) {
-                alert('Cloud storage failure: ' + error.message);
-            } else {
-                form.reset();
-                fetchLiveShowroom();
-            }
+    // BOOTSTRAP INITIALIZATION ENGINE INITIATOR
+    async function bootstrap() {
+      setupEventBindingsListeners();
+      loadSavedProfileDataConfigurations();
+      await syncDataFromCloudSupabase();
+    }
+
+    function setupEventBindingsListeners() {
+      document.getElementById("btn-trigger-add-modal").addEventListener("click", () => openFormModalForAddition());
+      document.getElementById("btn-export-json-file").addEventListener("click", exportShowroomDatabaseToJson);
+      document.getElementById("btn-trigger-import-click").addEventListener("click", () => document.getElementById("import-hidden-file-input").click());
+      document.getElementById("import-hidden-file-input").addEventListener("change", importShowroomDatabaseFromJsonFile);
+      document.getElementById("search-input-field").addEventListener("input", handleSearchQueryInputFiltering);
+      document.getElementById("profile-badge-btn").addEventListener("click", openProfileModalConfiguration);
+      
+      currencyToggleInput.addEventListener("change", (e) => {
+        globalActiveCurrencyCode = e.target.checked ? "IDR" : "USD";
+        localStorage.setItem("bimobil64_currency_preference", globalActiveCurrencyCode);
+        renderMetricsDashboardSummary();
+        renderDiecastShowcaseGridCards();
+      });
+
+      document.getElementById("filter-buttons-group").querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          document.getElementById("filter-buttons-group").querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          const selectedTarget = e.currentTarget;
+          selectedTarget.classList.add("active");
+          currentActiveFilterContextTag = selectedTarget.getAttribute("data-filter");
+          renderDiecastShowcaseGridCards();
         });
+      });
 
-        // HAPUS DATA DARI SUPABASE
-        async function deleteItem(id) {
-            if (confirm('Delete this diecast permanently from cloud showroom?')) {
-                const { error } = await supabase.from('diecasts').delete().eq('id', id);
-                if (error) alert('Delete failure: ' + error.message);
-                else fetchLiveShowroom();
-            }
+      const initialCurrencyPref = localStorage.getItem("bimobil64_currency_preference");
+      if (initialCurrencyPref) {
+        globalActiveCurrencyCode = initialCurrencyPref;
+        currencyToggleInput.checked = (globalActiveCurrencyCode === "IDR");
+      }
+    }
+
+    // LOAD PROFILE FROM LOCAL STORAGE
+    function loadSavedProfileDataConfigurations() {
+      const stored = localStorage.getItem("bimobil64_collector_profile_v2");
+      if (stored) {
+        try { userCollectorProfileSchemaObject = JSON.parse(stored); } catch(e) {}
+      }
+      applyProfileUiRenderChanges();
+    }
+
+    function applyProfileUiRenderChanges() {
+      document.getElementById("nav-username").innerText = userCollectorProfileSchemaObject.username;
+      document.getElementById("nav-title").innerText = userCollectorProfileSchemaObject.title;
+      document.getElementById("nav-avatar").src = userCollectorProfileSchemaObject.avatarUrl;
+      document.getElementById("hero-title").innerText = userCollectorProfileSchemaObject.showroomHeaderTitle;
+      document.getElementById("hero-subtitle").innerText = userCollectorProfileSchemaObject.showroomHeaderSubtitle;
+    }
+
+    // SINKRONISASI DATA UTAMA DARI CLOUD SUPABASE
+    async function syncDataFromCloudSupabase() {
+      const { data, error } = await supabase
+        .from('diecasts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error("Cloud connection failed:", error.message);
+        const storedLocal = localStorage.getItem("bimobil64_local_fallback");
+        if (storedLocal) {
+          try { diecastShowroomDataList = JSON.parse(storedLocal); } catch(e) {}
+        }
+      } else {
+        // Melakukan mapping data dari kolom Supabase agar sesuai dengan variabel internal index.html aslimu
+        diecastShowroomDataList = data.map(item => ({
+          id: item.id.toString(),
+          name: item.name,
+          brand: item.manufacturer || 'Unknown Brand',
+          segment: item.segment || '',
+          price: item.market_value || 0,
+          status: item.status_category || 'collection', // sesuaikan pemetaan status bawaan
+          images: Array.isArray(item.tags) ? item.tags : [item.status].filter(i => i && i.startsWith('http')), // fallback array gambar bawaanmu
+          customTags: Array.isArray(item.tags) ? item.tags.filter(t => !t.startsWith('http')) : [],
+          isLove: item.is_love || false,
+          isPinned: item.is_pinned || false
+        }));
+        // Update local backup
+        localStorage.setItem("bimobil64_local_fallback", JSON.stringify(diecastShowroomDataList));
+      }
+
+      renderMetricsDashboardSummary();
+      renderDiecastShowcaseGridCards();
+    }
+
+    // METRICS CALCULATION UTILITIES
+    function renderMetricsDashboardSummary() {
+      let totalCalculatedValuationValue = 0;
+      let countCollection = 0, countBucket = 0, countBooked = 0, countSold = 0, countPinned = 0;
+
+      diecastShowroomDataList.forEach(car => {
+        let priceValue = parseFloat(car.price) || 0;
+        totalCalculatedValuationValue += priceValue;
+
+        if (car.status === "collection") countCollection++;
+        else if (car.status === "bucket-lists") countBucket++;
+        else if (car.status === "booked") countBooked++;
+        else if (car.status === "sold") countSold++;
+
+        if (car.isPinned) countPinned++;
+      });
+
+      document.getElementById("stat-total-count").innerText = diecastShowroomDataList.length;
+      document.getElementById("stat-pinned-count").innerText = countPinned;
+      document.getElementById("stat-total-value").innerText = formatCurrencyValueDisplay(totalCalculatedValuationValue, globalActiveCurrencyCode);
+
+      document.getElementById("count-all").innerText = diecastShowroomDataList.length;
+      document.getElementById("count-collection").innerText = countCollection;
+      document.getElementById("count-bucket").innerText = countBucket;
+      document.getElementById("count-booked").innerText = countBooked;
+      document.getElementById("count-sold").innerText = countSold;
+    }
+
+    function formatCurrencyValueDisplay(value, currencyCode) {
+      if (currencyCode === "IDR") {
+        return "Rp " + Math.round(value).toLocaleString("id-ID");
+      } else {
+        return "$" + value.toFixed(2);
+      }
+    }
+
+    // SEARCH INPUTS FILTERING LOGICS
+    function handleSearchQueryInputFiltering(e) {
+      searchKeywordQueryString = e.target.value.trim().toLowerCase();
+      renderDiecastShowcaseGridCards();
+    }
+
+    // CORE RENDERING: CARDS PRESENTATION LAYER GENERATION (TETAP 100% SAMA)
+    function renderDiecastShowcaseGridCards() {
+      let itemsToDisplay = [...diecastShowroomDataList];
+
+      if (currentActiveFilterContextTag !== "all") {
+        itemsToDisplay = itemsToDisplay.filter(c => c.status === currentActiveFilterContextTag);
+      }
+
+      if (searchKeywordQueryString) {
+        itemsToDisplay = itemsToDisplay.filter(c => 
+          c.name.toLowerCase().includes(searchKeywordQueryString) ||
+          c.brand.toLowerCase().includes(searchKeywordQueryString) ||
+          c.segment.toLowerCase().includes(searchKeywordQueryString) ||
+          (c.customTags && c.customTags.some(t => t.toLowerCase().includes(searchKeywordQueryString)))
+        );
+      }
+
+      itemsToDisplay.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return 0;
+      });
+
+      if (itemsToDisplay.length === 0) {
+        diecastGrid.innerHTML = "";
+        emptyStatePlaceholder.style.display = "flex";
+        return;
+      }
+
+      emptyStatePlaceholder.style.display = "none";
+
+      const cardsHtml = itemsToDisplay.map(car => {
+        const isLoveStyleClass = car.isLove ? "active-love" : "";
+        const isPinStyleClass = car.isPinned ? "active-pin" : "";
+        const pinCardBorderClass = car.isPinned ? "pinned-card" : "";
+
+        let statusDisplayLabel = "Collection";
+        if (car.status === "bucket-lists") statusDisplayLabel = "Wishlist";
+        else if (car.status === "booked") statusDisplayLabel = "Booked";
+        else if (car.status === "sold") statusDisplayLabel = "Sold";
+
+        const marketFormatted = formatCurrencyValueDisplay(car.price || 0, globalActiveCurrencyCode);
+
+        let showcaseThumbnailUrl = "https://images.unsplash.com/photo-1594787318286-3d835c1d207f?auto=format&fit=crop&w=400&q=80";
+        if (car.images && car.images.length > 0 && car.images[0].trim() !== "") {
+          showcaseThumbnailUrl = car.images[0];
         }
 
-        // Jalankan sinkronisasi pertama kali
-        fetchLiveShowroom();
-    </script>
+        let tagsHtml = "";
+        if (car.customTags && car.customTags.length > 0) {
+          tagsHtml = car.customTags.map(t => `<span class="card-tag custom-tag-badge">${t}</span>`).join("");
+        }
+
+        let classTagStyle = "collection";
+        if (car.status === "bucket-lists") classTagStyle = "bucket-lists";
+        else if (car.status === "booked") classTagStyle = "booked";
+        else if (car.status === "sold") classTagStyle = "sold";
+
+        return `
+          <article class="card ${pinCardBorderClass}" onclick="openDetailsModalVisualizer('${car.id}')">
+            <div class="card-image-wrapper">
+              <div class="card-gallery">
+                <img class="card-img" src="${showcaseThumbnailUrl}" alt="${car.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1594787318286-3d835c1d207f?auto=format&fit=crop&w=400&q=80'">
+              </div>
+              <div class="card-image-glow"></div>
+              <span class="card-status-badge ${classTagStyle}">${statusDisplayLabel}</span>
+              <div class="card-top-controls" onclick="event.stopPropagation()">
+                <button class="card-badge-btn ${isLoveStyleClass}" onclick="toggleCardLoveState('${car.id}')" title="Mark Favorite">❤️</button>
+                <button class="card-badge-btn ${isPinStyleClass}" onclick="toggleCardPinState('${car.id}')" title="Pin Showcase">📌</button>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="card-tag">${car.segment || 'Mainline'}</span>
+                <span class="card-tag ${classTagStyle}">${statusDisplayLabel}</span>
+                ${tagsHtml}
+              </div>
+              <h2 class="card-title">${car.name}</h2>
+              <div class="card-details">
+                <div class="detail-group">
+                  <span class="detail-label">Manufacturer</span>
+                  <span class="detail-value">${car.brand}</span>
+                </div>
+                <div class="detail-group" style="align-items: flex-end;">
+                  <span class="detail-label">Market Value</span>
+                  <span class="detail-value financial-value">${marketFormatted}</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-actions" onclick="event.stopPropagation()">
+              <button class="action-icon-btn btn-edit" onclick="openEditCarModal('${car.id}', event)" title="Modify details">✏️</button>
+              <button class="action-icon-btn btn-delete" onclick="deleteCarRecord('${car.id}', event)" title="Remove item">🗑️</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      diecastGrid.innerHTML = cardsHtml;
+    }
+
+    // FORM FIELDS UTILITIES MODAL ENGINE
+    function openFormModalForAddition() {
+      document.getElementById("form-modal-title-heading").innerText = "Add New Diecast";
+      document.getElementById("diecast-registry-html-form").reset();
+      document.getElementById("form-field-car-id").value = "";
+      document.getElementById("multi-image-inputs-stack").innerHTML = "";
+      appendImageUrlInputField("");
+      refreshFormImagesPreviewStrip();
+      document.getElementById("modal-diecast-form-overlay").classList.add("active");
+    }
+
+    function openEditCarModal(id, event) {
+      if (event) event.stopPropagation();
+      const car = diecastShowroomDataList.find(c => c.id === id);
+      if (!car) return;
+
+      document.getElementById("form-modal-title-heading").innerText = "Edit Diecast Registry";
+      document.getElementById("form-field-car-id").value = car.id;
+      document.getElementById("field-car-name").value = car.name;
+      document.getElementById("field-car-brand").value = car.brand;
+      document.getElementById("field-car-segment").value = car.segment;
+      document.getElementById("field-car-price").value = car.price;
+      document.getElementById("field-car-status").value = car.status;
+
+      document.getElementById("multi-image-inputs-stack").innerHTML = "";
+      if (car.images && car.images.length > 0) {
+        car.images.forEach(img => appendImageUrlInputField(img));
+      } else {
+        appendImageUrlInputField("");
+      }
+
+      document.getElementById("tags-checkbox-selection-pool").querySelectorAll("input[type='checkbox']").forEach(chk => {
+        chk.checked = car.customTags && car.customTags.includes(chk.value);
+      });
+
+      refreshFormImagesPreviewStrip();
+      document.getElementById("modal-diecast-form-overlay").classList.add("active");
+    }
+
+    function closeFormModal() {
+      document.getElementById("modal-diecast-form-overlay").classList.remove("active");
+    }
+
+    function appendImageUrlInputField(value = "") {
+      const container = document.getElementById("multi-image-inputs-stack");
+      const wrapper = document.createElement("div");
+      wrapper.style.display = "flex";
+      wrapper.style.gap = "0.5rem";
+      wrapper.style.alignItems = "center";
+      wrapper.style.marginBottom = "0.25rem";
+
+      const input = document.createElement("input");
+      input.type = "url";
+      input.className = "form-control image-url-input-item";
+      input.placeholder = "https://example.com/image.jpg";
+      input.value = value;
+      input.addEventListener("input", refreshFormImagesPreviewStrip);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.innerHTML = "&times;";
+      removeBtn.className = "action-icon-btn btn-delete";
+      removeBtn.style.flexShrink = "0";
+      removeBtn.addEventListener("click", () => {
+        wrapper.remove();
+        refreshFormImagesPreviewStrip();
+      });
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(removeBtn);
+      container.appendChild(wrapper);
+      refreshFormImagesPreviewStrip();
+    }
+
+    function refreshFormImagesPreviewStrip() {
+      const row = document.getElementById("form-image-preview-strip-row");
+      row.innerHTML = "";
+      const inputs = document.getElementById("multi-image-inputs-stack").querySelectorAll(".image-url-input-item");
+      
+      inputs.forEach(inp => {
+        const val = inp.value.trim();
+        if (!val || !val.startsWith("http")) return;
+
+        const box = document.createElement("div");
+        box.className = "preview-thumb-box";
+        box.innerHTML = `<img class="preview-thumb-img" src="${val}" onerror="this.parentElement.remove()">`;
+        row.appendChild(box);
+      });
+    }
+
+    // FORM SAVING LOGICS SINKRON KE CLOUD
+    async function handleFormSubmission(e) {
+      e.preventDefault();
+      const id = document.getElementById("form-field-car-id").value;
+      const name = document.getElementById("field-car-name").value.trim();
+      const brand = document.getElementById("field-car-brand").value.trim();
+      const segment = document.getElementById("field-car-segment").value.trim();
+      const price = parseFloat(document.getElementById("field-car-price").value) || 0;
+      const status = document.getElementById("field-car-status").value;
+
+      const imgInputs = document.getElementById("multi-image-inputs-stack").querySelectorAll(".image-url-input-item");
+      const imagesArray = [];
+      imgInputs.forEach(inp => { if(inp.value.trim()) imagesArray.push(inp.value.trim()); });
+
+      const customTags = [];
+      document.getElementById("tags-checkbox-selection-pool").querySelectorAll("input[type='checkbox']").forEach(chk => {
+        if (chk.checked) customTags.push(chk.value);
+      });
+
+      // Gabungkan array untuk dikirim ke cloud database
+      const cloudTagsArray = [...imagesArray, ...customTags];
+      const mainFallbackImage = imagesArray[0] || 'COLLECTION';
+
+      if (id) {
+        // UPDATE CLOUD RECORD
+        const { error } = await supabase
+          .from('diecasts')
+          .update({
+            name,
+            manufacturer: brand,
+            segment,
+            market_value: price,
+            status_category: status,
+            tags: cloudTagsArray,
+            status: mainFallbackImage
+          })
+          .eq('id', parseInt(id));
+
+        if (error) alert("Gagal update cloud: " + error.message);
+      } else {
+        // INSERT CLOUD RECORD
+        const { error } = await supabase
+          .from('diecasts')
+          .insert([{
+            name,
+            manufacturer: brand,
+            segment,
+            market_value: price,
+            status_category: status,
+            tags: cloudTagsArray,
+            status: mainFallbackImage,
+            is_love: false,
+            is_pinned: false
+          }]);
+
+        if (error) alert("Gagal menyimpan ke cloud: " + error.message);
+      }
+
+      closeFormModal();
+      await syncDataFromCloudSupabase();
+    }
+
+    // INTERMEDIATE UI CORE TRIGGERS
+    async function toggleCardLoveState(id) {
+      const car = diecastShowroomDataList.find(c => c.id === id);
+      if (!car) return;
+      car.isLove = !car.isLove;
+
+      await supabase.from('diecasts').update({ is_love: car.isLove }).eq('id', parseInt(id));
+      renderDiecastShowcaseGridCards();
+    }
+
+    async function toggleCardPinState(id) {
+      const car = diecastShowroomDataList.find(c => c.id === id);
+      if (!car) return;
+      car.isPinned = !car.isPinned;
+
+      await supabase.from('diecasts').update({ is_pinned: car.isPinned }).eq('id', parseInt(id));
+      renderMetricsDashboardSummary();
+      renderDiecastShowcaseGridCards();
+    }
+
+    async function deleteCarRecord(id, event) {
+      if (event) event.stopPropagation();
+      if (!confirm("Are you absolutely sure you want to delete this diecast item registry from cloud permanently?")) return;
+
+      const { error } = await supabase.from('diecasts').delete().eq('id', parseInt(id));
+      if (error) {
+        alert("Gagal menghapus data dari cloud: " + error.message);
+      } else {
+        await syncDataFromCloudSupabase();
+      }
+    }
+
+    // DETAILS GALLERY MODAL UTILITIES
+    function openDetailsModalVisualizer(id) {
+      const car = diecastShowroomDataList.find(c => c.id === id);
+      if (!car) return;
+
+      document.getElementById("detail-title-heading").innerText = car.name;
+      document.getElementById("detail-val-brand").innerText = car.brand;
+      document.getElementById("detail-val-segment").innerText = car.segment || "Mainline / Standard";
+      document.getElementById("detail-val-price").innerText = formatCurrencyValueDisplay(car.price || 0, globalActiveCurrencyCode);
+
+      const statusField = document.getElementById("detail-val-status");
+      statusField.className = "spec-value highlighted-status";
+      if(car.status === "collection") { statusField.innerText = "Collection"; statusField.classList.add("status-collection"); }
+      else if(car.status === "bucket-lists") { statusField.innerText = "Wishlist"; statusField.classList.add("status-collection"); }
+      else if(car.status === "booked") { statusField.innerText = "Booked"; statusField.classList.add("status-booked"); }
+      else if(car.status === "sold") { statusField.innerText = "Sold"; statusField.classList.add("status-sold"); }
+
+      const frame = document.getElementById("detail-slider-wrapper-frame");
+      const strip = document.getElementById("detail-thumbnails-strip-row");
+      frame.innerHTML = "";
+      strip.innerHTML = "";
+
+      let validImages = car.images ? car.images.filter(i => i.trim() !== "") : [];
+      if (validImages.length === 0) {
+        validImages.push("https://images.unsplash.com/photo-1594787318286-3d835c1d207f?auto=format&fit=crop&w=800&q=80");
+      }
+
+      currentDetailsSliderActiveImageIdx = 0;
+
+      validImages.forEach((url, index) => {
+        const img = document.createElement("img");
+        img.className = `slider-img slider-img-item-${index}`;
+        img.src = url;
+        if(index === 0) img.classList.add("active");
+        frame.appendChild(img);
+
+        const thumb = document.createElement("div");
+        thumb.className = `thumb-box thumb-item-idx-${index}`;
+        if(index === 0) thumb.classList.add("active");
+        thumb.innerHTML = `<img class="thumb-img" src="${url}">`;
+        thumb.addEventListener("click", () => switchDetailSliderActiveImageTo(index));
+        strip.appendChild(thumb);
+      });
+
+      if (validImages.length > 1) {
+        const leftArrow = document.createElement("button");
+        leftArrow.className = "slider-arrow slider-arrow-left";
+        leftArrow.innerHTML = "&#10094;";
+        leftArrow.onclick = () => shiftDetailSliderActiveImageIdxBy(-1, validImages.length);
+        
+        const rightArrow = document.createElement("button");
+        rightArrow.className = "slider-arrow slider-arrow-right";
+        rightArrow.innerHTML = "&#10095;";
+        rightArrow.onclick = () => shiftDetailSliderActiveImageIdxBy(1, validImages.length);
+
+        frame.appendChild(leftArrow);
+        frame.appendChild(rightArrow);
+      }
+
+      document.getElementById("modal-view-details-overlay").classList.add("active");
+    }
+
+    function switchDetailSliderActiveImageTo(targetIndex) {
+      const frame = document.getElementById("detail-slider-wrapper-frame");
+      const strip = document.getElementById("detail-thumbnails-strip-row");
+
+      frame.querySelectorAll(".slider-img").forEach(i => i.classList.remove("active"));
+      strip.querySelectorAll(".thumb-box").forEach(t => t.classList.remove("active"));
+
+      const activeImg = frame.querySelector(`.slider-img-item-${targetIndex}`);
+      const activeThumb = strip.querySelector(`.thumb-item-idx-${targetIndex}`);
+      
+      if(activeImg) activeImg.classList.add("active");
+      if(activeThumb) activeThumb.classList.add("active");
+      
+      currentDetailsSliderActiveImageIdx = targetIndex;
+    }
+
+    function shiftDetailSliderActiveImageIdxBy(offset, totalLength) {
+      let nextIdx = currentDetailsSliderActiveImageIdx + offset;
+      if (nextIdx >= totalLength) nextIdx = 0;
+      if (nextIdx < 0) nextIdx = totalLength - 1;
+      switchDetailSliderActiveImageTo(nextIdx);
+    }
+
+    function closeDetailsModal(event) {
+      document.getElementById("modal-view-details-overlay").classList.remove("active");
+    }
+
+    // USER PROFILE MODAL LOGICS
+    function openProfileModalConfiguration() {
+      document.getElementById("profile-input-username").value = userCollectorProfileSchemaObject.username;
+      document.getElementById("profile-input-title").value = userCollectorProfileSchemaObject.title;
+      document.getElementById("profile-input-avatar").value = userCollectorProfileSchemaObject.avatarUrl;
+      document.getElementById("profile-input-hero-title").value = userCollectorProfileSchemaObject.showroomHeaderTitle;
+      document.getElementById("profile-input-hero-subtitle").value = userCollectorProfileSchemaObject.showroomHeaderSubtitle;
+      document.getElementById("modal-profile-edit-overlay").classList.add("active");
+    }
+
+    function closeProfileModal() {
+      document.getElementById("modal-profile-edit-overlay").classList.remove("active");
+    }
+
+    function handleProfileFormSave(e) {
+      e.preventDefault();
+      userCollectorProfileSchemaObject.username = document.getElementById("profile-input-username").value.trim();
+      userCollectorProfileSchemaObject.title = document.getElementById("profile-input-title").value.trim();
+      userCollectorProfileSchemaObject.avatarUrl = document.getElementById("profile-input-avatar").value.trim();
+      userCollectorProfileSchemaObject.showroomHeaderTitle = document.getElementById("profile-input-hero-title").value.trim();
+      userCollectorProfileSchemaObject.showroomHeaderSubtitle = document.getElementById("profile-input-hero-subtitle").value.trim();
+
+      localStorage.setItem("bimobil64_collector_profile_v2", JSON.stringify(userCollectorProfileSchemaObject));
+      applyProfileUiRenderChanges();
+      closeProfileModal();
+    }
+
+    // DATA IMPORT / EXPORT UTILITIES HUBS (SINKRON CLOUD SEKALIGUS)
+    function exportShowroomDatabaseToJson() {
+      if(diecastShowroomDataList.length === 0) return alert("No records present to export.");
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(diecastShowroomDataList, null, 2));
+      const downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href", dataStr);
+      downloadAnchorNode.setAttribute("download", "bimobil64_showroom_vault_backup.json");
+      document.body.appendChild(downloadAnchorNode);
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    }
+
+    function importShowroomDatabaseFromJsonFile(event) {
+      const fileReader = new FileReader();
+      const targetFile = event.target.files[0];
+      if (!targetFile) return;
+
+      fileReader.onload = async function(e) {
+        try {
+          const parsedData = JSON.parse(e.target.result);
+          if (!Array.isArray(parsedData)) throw new Error("Format data must be an Array list container.");
+          
+          if(confirm(`Menyinkronkan ${parsedData.length} data diecast dari file backup ke cloud database?`)) {
+            for(let item of parsedData) {
+              const cloudTagsArray = [...(item.images || []), ...(item.customTags || [])];
+              const fallbackUrl = item.images && item.images[0] ? item.images[0] : 'COLLECTION';
+
+              await supabase.from('diecasts').insert([{
+                name: item.name,
+                manufacturer: item.brand,
+                segment: item.segment,
+                market_value: item.price,
+                status_category: item.status || 'collection',
+                tags: cloudTagsArray,
+                status: fallbackUrl,
+                is_love: item.isLove || false,
+                is_pinned: item.isPinned || false
+              }]);
+            }
+            alert("Backup data berhasil di-import dan disinkronkan ke Cloud Database!");
+            await syncDataFromCloudSupabase();
+          }
+        } catch(err) {
+          alert("Error parsing backup data file configuration JSON: " + err.message);
+        }
+      };
+      fileReader.readAsText(targetFile);
+    }
+
+    window.addEventListener("DOMContentLoaded", bootstrap);
+  </script>
 </body>
 </html>
