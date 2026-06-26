@@ -3,54 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BiMobil 64 - Cloud Live Dashboard</title>
+    <title>BIMOBIL64 - Showroom System</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0d0f14; color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .glass-card { background: rgba(18, 22, 31, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        body {
+            background-color: #0b0c10;
+            color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: radial-gradient(circle at top right, rgba(44, 22, 74, 0.25), transparent 600px);
+        }
+        .glass-card {
+            background: rgba(17, 20, 28, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .diecast-card {
+            background: linear-gradient(145deg, rgba(15, 18, 26, 0.95), rgba(22, 27, 38, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .diecast-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(234, 179, 8, 0.3);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 min-h-screen">
 
-    <header class="max-w-6xl mx-auto flex justify-between items-center mb-8 glass-card p-4 rounded-2xl shadow-xl">
-        <div class="flex items-center gap-3">
-            <div id="logo-container" class="w-10 h-10 flex items-center justify-center bg-indigo-600/20 rounded-xl border border-indigo-500/30">
-                <img id="main-logo" src="images/logo.png" alt="Logo" class="w-7 h-7 object-contain" onerror="document.getElementById('logo-container').innerHTML='🏎️'">
+    <header class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 glass-card p-5 rounded-2xl shadow-2xl border border-gray-800/40">
+        <div class="flex items-center gap-4">
+            <div id="logo-wrapper" class="w-12 h-12 flex items-center justify-center bg-yellow-500/10 rounded-2xl border border-yellow-500/20 shadow-inner">
+                <img id="app-logo" src="images/logo.png" alt="Logo" class="w-8 h-8 object-contain" onerror="document.getElementById('logo-wrapper').innerHTML='🏎️'">
             </div>
             <div>
-                <h1 class="text-xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">BIMOBIL 64</h1>
-                <p class="text-xs text-gray-400">Cloud Live Catalog System</p>
+                <h1 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-indigo-400">BIMOBIL 64</h1>
+                <p class="text-xs text-gray-400 font-medium tracking-wide">Ultimate 1:64 Collector Showroom</p>
             </div>
         </div>
-        <div class="flex items-center gap-3 glass-card px-4 py-2 rounded-xl border border-gray-800">
-            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span class="text-xs font-semibold tracking-wide text-gray-300">CLOUD SYNC LIVE</span>
+        
+        <div class="flex items-center gap-3 bg-gray-900/60 p-2 pr-4 rounded-xl border border-gray-800/80 shadow-md">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-yellow-500 to-pink-500 flex items-center justify-center font-bold text-white text-sm shadow">BP</div>
+            <div class="text-left">
+                <h4 class="text-xs font-bold text-gray-200">Bimo Purwanto</h4>
+                <p class="text-[10px] text-gray-400 font-semibold tracking-tight">Ultimate 1:64 Collector</p>
+            </div>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto">
-        <section class="glass-card p-6 rounded-2xl border border-gray-800/60 mb-8">
-            <h2 class="text-md font-bold mb-4 text-indigo-400 flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> Tambah Koleksi Baru</h2>
+        <section class="glass-card p-6 rounded-2xl border border-gray-800/40 shadow-xl mb-10">
+            <div class="flex justify-between items-center mb-5 border-b border-gray-800/60 pb-3">
+                <h2 class="text-sm font-black text-yellow-400 uppercase tracking-widest flex items-center gap-2"><i class="fa-solid fa-circle-plus"></i> Add New Collection</h2>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse">LIVE STORAGE</span>
+            </div>
             <form id="diecast-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="name" placeholder="Nama Mobil (e.g. Nissan Skyline GT-R)" class="bg-gray-900/60 border border-gray-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all" required>
-                <input type="text" id="manufacturer" placeholder="Produsen (e.g. Hot Wheels, Tomica)" class="bg-gray-900/60 border border-gray-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all">
-                <div class="flex gap-2">
-                    <input type="number" step="0.01" id="market_value" placeholder="Harga/Value" class="bg-gray-900/60 border border-gray-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all w-full">
-                    <select id="currency" class="bg-gray-900 border border-gray-800 rounded-xl px-2 py-2.5 text-sm focus:outline-none text-gray-300">
-                        <option value="USD">$ USD</option>
-                        <option value="IDR">Rp IDR</option>
-                    </select>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Model Name</label>
+                    <input type="text" id="name" placeholder="e.g. Nissan Skyline GT-R BNR34" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all" required>
                 </div>
-                <input type="text" id="tags" placeholder="Tags (pisahkan dengan koma, e.g JDM, Premium)" class="bg-gray-900/60 border border-gray-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 transition-all md:col-span-2">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 font-bold text-sm text-white rounded-xl py-2.5 transition-all shadow-lg shadow-indigo-600/20">Simpan Ke Cloud 🚀</button>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Manufacturer</label>
+                    <input type="text" id="manufacturer" placeholder="e.g. Hot Wheels, Tomica" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all">
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Market Valuation</label>
+                    <div class="flex gap-2">
+                        <input type="number" step="0.01" id="market_value" placeholder="Value" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all w-full">
+                        <select id="currency" class="bg-gray-950 border border-gray-800 rounded-xl px-3 py-3 text-sm focus:outline-none text-gray-300 font-bold">
+                            <option value="USD">USD ($)</option>
+                            <option value="IDR">IDR (Rp)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1.5 md:col-span-2">
+                    <label class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Tags / Categories</label>
+                    <input type="text" id="tags" placeholder="e.g. JDM, Premium, Fast & Furious (separate with comma)" class="bg-gray-950/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-yellow-500/60 text-white transition-all">
+                </div>
+                <div class="flex flex-col justify-end">
+                    <button type="submit" class="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 font-black text-xs uppercase tracking-widest text-gray-950 rounded-xl py-3.5 transition-all shadow-lg shadow-yellow-500/10">
+                        Commit To Cloud <i class="fa-solid fa-cloud-arrow-up ml-1"></i>
+                    </button>
+                </div>
             </form>
         </section>
 
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-lg font-black tracking-wide flex items-center gap-2"><i class="fa-solid fa-car-side text-indigo-400"></i> LIVE SHOWROOM</h2>
-            <span id="counter" class="text-xs font-bold glass-card px-3 py-1.5 rounded-full text-indigo-300 border border-gray-800">0 Items</span>
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+            <div>
+                <h2 class="text-lg font-black tracking-tight flex items-center gap-2 text-white">
+                    <i class="fa-solid fa-table-cells-large text-yellow-500"></i> CURRENT SHOWROOM
+                </h2>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="counter" class="text-xs font-black bg-gray-900 px-4 py-2 rounded-xl text-yellow-400 border border-gray-800 shadow">0 ITEMS COLLECTED</span>
+            </div>
         </div>
         
         <div id="showroom" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -67,9 +115,12 @@
         const showroom = document.getElementById('showroom');
         const counter = document.getElementById('counter');
 
-        // AMBIL DATA LIVE DARI CLOUD
+        // LOAD DATA DARI CLOUD SUPABASE
         async function fetchLiveShowroom() {
-            showroom.innerHTML = `<div class="col-span-full text-center text-gray-500 text-sm py-12"><i class="fa-solid fa-circle-notch animate-spin text-xl mb-2 text-indigo-500"></i><br>Mengambil koleksi dari cloud...</div>`;
+            showroom.innerHTML = `
+                <div class="col-span-full text-center text-gray-500 text-xs py-16 font-bold tracking-widest uppercase">
+                    <i class="fa-solid fa-spinner animate-spin text-2xl mb-3 text-yellow-500"></i><br>Syncing with database cloud...
+                </div>`;
             
             const { data, error } = await supabase
                 .from('diecasts')
@@ -77,42 +128,59 @@
                 .order('created_at', { ascending: false });
 
             if (error) {
-                showroom.innerHTML = `<div class="col-span-full text-center text-red-400 text-sm py-12">Gagal koneksi cloud database.</div>`;
+                showroom.innerHTML = `<div class="col-span-full text-center text-red-400 text-sm py-12">Database authentication error.</div>`;
                 return;
             }
 
-            counter.innerText = `${data.length} Items`;
+            counter.innerText = `${data.length} ITEMS COLLECTED`;
             if (data.length === 0) {
-                showroom.innerHTML = `<div class="col-span-full text-center text-gray-500 text-sm py-12">Belum ada koleksi di cloud. Mulai input sekarang!</div>`;
+                showroom.innerHTML = `
+                    <div class="col-span-full text-center text-gray-600 text-xs py-16 font-bold border border-dashed border-gray-800 rounded-2xl bg-gray-900/10">
+                        SHOWROOM IS EMPTY.<br>ADD YOUR FIRST DIECAST ABOVE TO INITIATE CLOUD BACKUP.
+                    </div>`;
                 return;
             }
 
             showroom.innerHTML = '';
             data.forEach(item => {
-                const tagBadges = item.tags ? item.tags.map(t => `<span class="bg-gray-800 text-gray-400 text-[10px] px-2 py-0.5 rounded font-medium">#${t.trim()}</span>`).join(' ') : '';
-                const hargaFormatted = item.market_value ? (item.currency === 'IDR' ? 'Rp ' + Number(item.market_value).toLocaleString('id-ID') : '$' + item.market_value) : '-';
+                // Generate Tag Badges Sesuai Desain Warna Ungu-Pink Kamu Yang Lama
+                const tagBadges = item.tags ? item.tags.map(t => {
+                    if(!t.trim()) return '';
+                    return `<span class="bg-indigo-950/50 text-indigo-300 text-[9px] px-2 py-0.5 rounded-md font-bold border border-indigo-500/10 uppercase tracking-wide">#${t.trim()}</span>`;
+                }).join(' ') : '';
+                
+                const hargaFormatted = item.market_value ? (item.currency === 'IDR' ? 'Rp ' + Number(item.market_value).toLocaleString('id-ID') : '$' + Number(item.market_value).toFixed(2)) : '$0.00';
 
                 const card = document.createElement('div');
-                card.className = 'glass-card p-5 rounded-2xl relative border border-gray-800 hover:border-indigo-500/40 transition-all shadow-lg flex flex-col justify-between group';
+                card.className = 'diecast-card p-5 rounded-2xl relative flex flex-col justify-between group shadow-xl';
+                
+                // Card Tampilan Mewah Sesuai Screenshot Asli Kamu
                 card.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-xs font-bold text-indigo-400 bg-indigo-900/30 px-2.5 py-1 rounded-lg border border-indigo-500/20 tracking-wider">${item.manufacturer || 'Unknown'}</span>
-                            <button onclick="deleteItem(${item.id})" class="text-gray-600 hover:text-red-400 text-xs transition-all opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash-can"></i></button>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-black text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-500/20 tracking-wider uppercase">
+                                <i class="fa-solid fa-circle text-[6px] mr-1.5 align-middle animate-pulse"></i>Collection
+                            </span>
+                            <div class="flex gap-2 items-center">
+                                <button onclick="deleteItem(${item.id})" class="text-gray-700 hover:text-red-400 text-xs transition-all opacity-0 group-hover:opacity-100 p-1"><i class="fa-solid fa-trash-can"></i></button>
+                                <span class="text-pink-500 text-xs"><i class="fa-solid fa-heart"></i></span>
+                                <span class="text-yellow-500 text-xs"><i class="fa-solid fa-thumbtack"></i></span>
+                            </div>
                         </div>
-                        <h3 class="text-md font-extrabold tracking-wide text-white mb-2">${item.name}</h3>
-                        <div class="flex flex-wrap gap-1 mb-4">${tagBadges}</div>
+                        <h3 class="text-base font-black tracking-tight text-white mb-1 group-hover:text-yellow-400 transition-colors">${item.name}</h3>
+                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-4">${item.manufacturer || 'Unknown Manufacturer'}</p>
+                        <div class="flex flex-wrap gap-1.5 mb-4">${tagBadges}</div>
                     </div>
-                    <div class="border-t border-gray-800/80 pt-3 flex justify-between items-center">
-                        <span class="text-[11px] uppercase tracking-wider text-gray-500 font-bold">Market Value</span>
-                        <span class="text-sm font-black text-emerald-400 font-mono">${hargaFormatted}</span>
+                    <div class="border-t border-gray-800/80 pt-4 mt-2 flex justify-between items-center">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-500 font-extrabold">Market Value</span>
+                        <span class="text-sm font-black text-gray-200 font-mono tracking-tight">${hargaFormatted}</span>
                     </div>
                 `;
                 showroom.appendChild(card);
             });
         }
 
-        // TAMBAH DATA MASUK KE CLOUD
+        // INPUT DATA KE SUPABASE
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('name').value;
@@ -120,30 +188,32 @@
             const market_value = document.getElementById('market_value').value;
             const currency = document.getElementById('currency').value;
             const tagsInput = document.getElementById('tags').value;
-            const tags = tagsInput ? tagsInput.split(',') : [];
+            
+            // Pecah string tags berdasarkan koma
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()) : [];
 
             const { error } = await supabase.from('diecasts').insert([
                 { name, manufacturer, market_value: market_value ? parseFloat(market_value) : null, currency, tags }
             ]);
 
             if (error) {
-                alert('Gagal menyimpan data ke cloud: ' + error.message);
+                alert('Cloud storage failure: ' + error.message);
             } else {
                 form.reset();
                 fetchLiveShowroom();
             }
         });
 
-        // HAPUS DATA DARI CLOUD
+        // HAPUS DATA DARI SUPABASE
         async function deleteItem(id) {
-            if (confirm('Hapus item diecast ini dari cloud database?')) {
+            if (confirm('Delete this diecast permanently from cloud showroom?')) {
                 const { error } = await supabase.from('diecasts').delete().eq('id', id);
-                if (error) alert('Gagal menghapus: ' + error.message);
+                if (error) alert('Delete failure: ' + error.message);
                 else fetchLiveShowroom();
             }
         }
 
-        // LOAD JALAN PERTAMA KALI
+        // Jalankan sinkronisasi pertama kali
         fetchLiveShowroom();
     </script>
 </body>
