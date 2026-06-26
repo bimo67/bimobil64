@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIMOBIL64 - Premium Diecast Showroom</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- CSS Styles -->
+  <style>
+    :root { --bg-dark: #050814; --bg-card: rgba(13, 20, 38, 0.45); --bg-card-hover: rgba(22, 32, 60, 0.7); --border-color: rgba(255, 255, 255, 0.08); --border-hover: rgba(255, 255, 255, 0.2); --text-primary: #f8fafc; --text-secondary: #94a3b8; --text-muted: #627288; --accent-blue: #3b82f6; --accent-blue-glow: rgba(59, 130, 246, 0.2); --status-collection: #10b981; --status-collection-glow: rgba(16, 185, 129, 0.15); --status-bucket: #06b6d4; --status-bucket-glow: rgba(6, 182, 212, 0.15); --status-booked: #f59e0b; --status-booked-glow: rgba(245, 158, 11, 0.15); --status-sold: #ef4444; --status-sold-glow: rgba(239, 68, 68, 0.15); --accent-pink: #ec4899; --accent-pink-glow: rgba(236, 72, 153, 0.25); --accent-gold: #facc15; --accent-gold-glow: rgba(250, 204, 21, 0.25); --font-main: 'Outfit', sans-serif; --font-title: 'Space Grotesk', sans-serif; --font-ui: 'Plus Jakarta Sans', sans-serif; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); --blur: blur(12px); }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+    body { background-color: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; position: relative; }
+    .glow-orbs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.1; transition: var(--transition); }
+    .orb-1 { width: 600px; height: 600px; background: var(--accent-blue); top: -200px; left: -150px; animation: float 25s infinite ease-in-out alternate; }
+    .orb-2 { width: 600px; height: 600px; background: var(--accent-pink); bottom: -200px; right: -150px; animation: float 30s infinite ease-in-out alternate-reverse; }
+    .orb-3 { width: 500px; height: 500px; background: var(--status-collection); top: 35%; left: 45%; opacity: 0.04; }
+    @keyframes float { 0% { transform: translateY(0) scale(1) rotate(0deg); } 100% { transform: translateY(70px) scale(1.15) rotate(15deg); } }
+    header { background: rgba(5, 8, 20, 0.7); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .header-container { max-width: 1280px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo-area { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .logo-img { height: 38px; width: auto; object-fit: contain; border-radius: 8px; }
+    .logo-icon { font-size: 2rem; animation: spin-slow 20s infinite linear; }
+    @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+    .logo-text { font-family: var(--font-title); font-weight: 700; font-size: 1.6rem; background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
+    .profile-badge { display: flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 0.4rem 1rem 0.4rem 0.5rem; border-radius: 50px; cursor: pointer; transition: var(--transition); }
+    .profile-badge:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-hover); transform: translateY(-1px); }
+    .profile-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255, 255, 255, 0.2); background: #111827; }
+    .profile-info { display: flex; flex-direction: column; }
+    .profile-name { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 700; color: var(--text-primary); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .profile-status { font-size: 0.65rem; color: var(--text-secondary); font-weight: 500; }
+    main { max-width: 1280px; margin: 0 auto; padding: 2rem; flex-grow: 1; width: 100%; }
+    .hero-banner { text-align: center; margin-bottom: 2.5rem; position: relative; }
+    .hero-banner h1 { font-family: var(--font-title); font-size: 3.2rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-banner p { color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin: 0 auto; line-height: 1.5; }
+    .analytics-dashboard { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+    @media (min-width: 640px) { .analytics-dashboard { grid-template-columns: repeat(3, 1fr); } }
+    .analytics-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); position: relative; overflow: hidden; transition: var(--transition); }
+    .analytics-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(to right, transparent, var(--card-glow, var(--accent-blue)), transparent); }
+    .analytics-card:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+    .analytics-label { font-family: var(--font-ui); font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .analytics-value { font-family: var(--font-title); font-size: 1.8rem; font-weight: 700; color: var(--text-primary); }
+    .analytics-desc { font-size: 0.75rem; color: var(--text-secondary); }
+    .controls-panel { background: rgba(13, 20, 38, 0.3); border: 1px solid var(--border-color); border-radius: 20px; padding: 1.5rem; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+    .controls-top { display: flex; flex-direction: column; gap: 1rem; }
+    @media (min-width: 768px) { .controls-top { flex-direction: row; align-items: center; justify-content: space-between; } }
+    .search-wrapper { position: relative; flex-grow: 1; max-width: 500px; width: 100%; }
+    .search-input { width: 100%; background: rgba(5, 8, 20, 0.6); border: 1px solid var(--border-color); padding: 0.8rem 1rem 0.8rem 2.8rem; border-radius: 12px; color: var(--text-primary); font-size: 0.95rem; transition: var(--transition); }
+    .search-input:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px var(--accent-blue-glow); }
+    .search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); fill: var(--text-muted); width: 18px; height: 18px; pointer-events: none; transition: var(--transition); }
+    .search-input:focus + .search-icon { fill: var(--accent-blue); }
+    .controls-actions { display: flex; gap: 0.75rem; align-items: center; }
+    .filter-panel { display: flex; flex-direction: column; gap: 0.75rem; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.25rem; }
+    .filter-section-title { font-family: var(--font-ui); font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .filter-container { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .filter-btn { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition); }
+    .filter-btn:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--border-hover); color: var(--text-primary); }
+    .filter-btn.active { background: var(--text-primary); border-color: var(--text-primary); color: var(--bg-dark); }
+    .filter-btn.active .filter-count { background: rgba(0, 0, 0, 0.12); color: inherit; }
+    .filter-count { font-size: 0.7rem; background: rgba(255, 255, 255, 0.06); padding: 0.1rem 0.4rem; border-radius: 20px; color: var(--text-secondary); font-weight: 700; transition: var(--transition); }
+    .filter-btn-add { border: 1px dashed rgba(255, 255, 255, 0.2); background: transparent; color: var(--text-muted); padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: var(--transition); }
+    .filter-btn-add:hover { border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-glow); }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition); border: 1px solid transparent; white-space: nowrap; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-blue), #2563eb); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5); }
+    .btn-secondary { background: rgba(255, 255, 255, 0.03); border-color: var(--border-color); color: var(--text-primary); }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-hover); }
+    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; transition: var(--transition); }
+    @media (min-width: 640px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .cards-grid { grid-template-columns: repeat(3, 1fr); } }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); transition: var(--transition); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); cursor: pointer; }
+    .card.pinned-card { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(250, 204, 21, 0.2), 0 4px 20px rgba(0, 0, 0, 0.25); }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px; padding: 1px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+    .card:hover { transform: translateY(-6px); background: var(--bg-card-hover); border-color: var(--card-border-glow, var(--border-hover)); box-shadow: 0 12px 30px var(--card-shadow-glow, rgba(0, 0, 0, 0.3)); }
+    .card-image-wrapper { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #090e1a; display: flex; align-items: center; justify-content: center; }
+    .card-gallery { width: 100%; height: 100%; background-size: cover; background-position: center; background-repeat: no-repeat; transition: var(--transition); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .card-img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .card:hover .card-img { transform: scale(1.05); }
+    .card-image-glow { position: absolute; bottom: 0; left: 0; width: 100%; height: 35%; background: linear-gradient(to top, var(--card-badge-color, rgba(59, 130, 246, 0.15)), transparent); opacity: 0.6; pointer-events: none; }
+    .card-status-badge { position: absolute; top: 1rem; right: 1rem; padding: 0.35rem 0.8rem; border-radius: 30px; font-family: var(--font-ui); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; gap: 0.35rem; z-index: 4; }
+    .card-status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .card-status-badge.collection { background-color: var(--status-collection-glow); color: #34d399; border-color: rgba(52, 211, 153, 0.3); }
+    .card-status-badge.bucket-lists { background-color: var(--status-bucket-glow); color: #22d3ee; border-color: rgba(34, 211, 238, 0.3); }
+    .card-status-badge.booked { background-color: var(--status-booked-glow); color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+    .card-status-badge.sold { background-color: var(--status-sold-glow); color: #f87171; border-color: rgba(248, 113, 113, 0.3); }
+    .card-top-controls { position: absolute; top: 1rem; left: 1rem; display: flex; gap: 0.4rem; z-index: 5; }
+    .card-badge-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(5, 8, 20, 0.7); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); color: var(--text-muted); }
+    .card-badge-btn:hover { background: rgba(5, 8, 20, 0.95); transform: scale(1.1); border-color: var(--border-hover); }
+    .card-badge-btn.active-love { color: #f43f5e !important; border-color: rgba(244, 63, 94, 0.4); background: rgba(244, 63, 94, 0.15); text-shadow: 0 0 5px rgba(244, 63, 94, 0.6); }
+    .card-badge-btn.active-pin { color: var(--accent-gold) !important; border-color: rgba(250, 204, 21, 0.4); background: rgba(250, 204, 21, 0.15); }
+    .card-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .card-tag { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); padding: 0.15rem 0.55rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); }
+    .card-tag.custom-tag-badge { border-color: rgba(147, 51, 234, 0.4); color: #c084fc; background: rgba(147, 51, 234, 0.08); }
+    .card-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; line-height: 1.3; margin-bottom: 1rem; color: var(--text-primary); transition: var(--transition); }
+    .card:hover .card-title { color: white; }
+    .card-details { border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1rem; margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .detail-group { display: flex; flex-direction: column; }
+    .detail-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+    .detail-value { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); }
+    .detail-value.financial-value { color: var(--text-primary); }
+    .card-actions { position: absolute; bottom: 1rem; right: 1.25rem; display: flex; gap: 0.4rem; opacity: 0; transform: translateY(5px); transition: var(--transition); z-index: 5; }
+    .card:hover .card-actions { opacity: 1; transform: translateY(0); }
+    .action-icon-btn { background: rgba(5, 8, 20, 0.8); border: 1px solid var(--border-color); color: var(--text-secondary); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+    .action-icon-btn:hover { transform: scale(1.1); }
+    .action-icon-btn.btn-edit:hover { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); border-color: rgba(59, 130, 246, 0.4); }
+    .action-icon-btn.btn-delete:hover { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); }
+    .utilities-hub { margin-top: 4rem; background: rgba(13, 20, 38, 0.25); border: 1px solid var(--border-color); border-radius: 20px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
+    @media (min-width: 768px) { .utilities-hub { flex-direction: row; justify-content: space-between; align-items: center; } }
+    .utility-desc { display: flex; flex-direction: column; gap: 0.25rem; }
+    .utility-title { font-family: var(--font-title); font-size: 1.1rem; font-weight: 700; }
+    .utility-subtitle { font-size: 0.8rem; color: var(--text-secondary); }
+    .utility-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .hidden-file-input { display: none; }
+    .currency-toggle-wrapper { display: flex; align-items: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 0.35rem 0.75rem; border-radius: 10px; }
+    .currency-toggle-label { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); }
+    .switch { position: relative; display: inline-block; width: 38px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.1); transition: .3s; border-radius: 34px; border: 1px solid var(--border-color); }
+    .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background-color: var(--text-primary); transition: .3s; border-radius: 50%; }
+    input:checked + .slider { background-color: var(--accent-blue); }
+    input:checked + .slider:before { transform: translateX(18px); }
+    .empty-state { text-align: center; padding: 5rem 2rem; background: rgba(13, 20, 38, 0.15); border: 1px dashed var(--border-color); border-radius: 20px; display: none; flex-direction: column; align-items: center; gap: 1rem; }
+    .empty-icon { font-size: 3rem; opacity: 0.5; }
+    .empty-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; }
+    .empty-desc { color: var(--text-secondary); font-size: 0.9rem; max-width: 340px; line-height: 1.5; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); display: flex; justify-content: center; align-items: center; z-index: 200; opacity: 0; pointer-events: none; transition: var(--transition); padding: 1.5rem; overflow-y: auto; }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-container { background: #0a0e1c; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); overflow: hidden; transform: scale(0.95); transition: var(--transition); display: flex; flex-direction: column; max-height: 90vh; margin: auto; }
+    .modal-overlay.active .modal-container { transform: scale(1); }
+    /* A <form> wrapping modal-body + footer is display:block by default, which breaks
+       the flex-grow/scroll chain below. Forcing it into the same flex column as its
+       parent lets modal-body actually claim the remaining space and scroll internally
+       instead of the whole modal silently overflowing past the viewport. */
+    .modal-container > form { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.01); flex-shrink: 0; }
+    .modal-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; }
+    .modal-close { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.6rem; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; transition: var(--transition); }
+    .modal-close:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+    .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; min-height: 0; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-control { width: 100%; background: rgba(5, 8, 20, 0.6); border: 1px solid var(--border-color); padding: 0.8rem 1rem; border-radius: 10px; color: var(--text-primary); font-size: 0.95rem; transition: var(--transition); }
+    .form-control:focus { outline: none; border-color: var(--accent-blue); box-shadow: 0 0 0 3px var(--accent-blue-glow); }
+    select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.1rem; padding-right: 2.5rem; }
+    .multi-image-container { border: 1.5px dashed var(--border-color); border-radius: 12px; padding: 1rem; background: rgba(5, 8, 20, 0.25); display: flex; flex-direction: column; gap: 1rem; }
+    .multi-image-inputs { display: flex; flex-direction: column; gap: 0.5rem; }
+    .image-preview-strip { display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 0; scrollbar-width: thin; }
+    .preview-thumb-box { position: relative; width: 80px; height: 60px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); flex-shrink: 0; transition: var(--transition); }
+    .preview-thumb-img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-thumb-remove { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 50%; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 6; }
+    .detail-container { max-width: 800px; }
+    .slider-wrapper { position: relative; aspect-ratio: 16/9; width: 100%; background: #03060d; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-color); }
+    .slider-img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .slider-img.active { display: block; }
+    .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(5, 8, 20, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); color: white; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); user-select: none; z-index: 10; }
+    .slider-arrow:hover { background: rgba(5, 8, 20, 0.9); scale: 1.05; }
+    .slider-arrow-left { left: 1rem; }
+    .slider-arrow-right { right: 1rem; }
+    .thumbnails-strip { display: flex; justify-content: center; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto; padding: 0.25rem 0; }
+    .thumb-box { width: 60px; height: 45px; border-radius: 6px; overflow: hidden; cursor: pointer; border: 2px solid transparent; opacity: 0.6; transition: var(--transition); flex-shrink: 0; }
+    .thumb-box.active { border-color: var(--accent-blue); opacity: 1; transform: scale(1.05); }
+    .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+    .spec-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 0.75rem 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: 0.25rem; }
+    .spec-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+    .spec-value { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+    .spec-value.highlighted-status { display: inline-block; width: fit-content; padding: 0.15rem 0.5rem; border-radius: 20px; font-size: 0.75rem; text-transform: uppercase; }
+    .spec-value.status-collection { background: var(--status-collection-glow); color: #34d399; }
+    .spec-value.status-bucket { background: var(--status-bucket-glow); color: #22d3ee; }
+    .spec-value.status-booked { background: var(--status-booked-glow); color: #fbbf24; }
+    .spec-value.status-sold { background: var(--status-sold-glow); color: #f87171; }
+    .form-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 0.75rem; background: rgba(255, 255, 255, 0.01); flex-shrink: 0; }
+    .tags-checkbox-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .tag-checkbox-item { position: relative; }
+    .tag-checkbox-item input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+    .tag-checkbox-label { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: inline-block; transition: var(--transition); font-weight: 600; }
+    .tag-checkbox-item input:checked + .tag-checkbox-label { background: rgba(147, 51, 234, 0.15); border-color: rgba(147, 51, 234, 0.4); color: #c084fc; }
+    footer { border-top: 1px solid var(--border-color); padding: 2.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: auto; background: rgba(3, 5, 12, 0.2); }
+    .footer-logo { font-family: var(--font-title); font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <!-- Ambient background glows -->
+  <div class="glow-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <!-- Navigation Header -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo-area">
+        <img class="logo-img" src="images/logo.png" alt="Logo BiMobil 64" onload="this.style.display='inline-block'; document.getElementById('logo-fallback').style.display='none';" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='inline';" style="display: none;">
+        <span id="logo-fallback" class="logo-icon">🏎️</span>
+        <span class="logo-text"></span>
+      </a>
+      <!-- Profile badge widget -->
+      <div class="profile-badge" id="profile-badge-btn" title="Edit Profile Details">
+        <img class="profile-avatar" id="nav-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="Avatar">
+        <div class="profile-info">
+          <span class="profile-name" id="nav-name">John Doe</span>
+          <span class="profile-status" id="nav-bio">Senior Collector</span>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Main Content Container -->
+  <main>
+    <!-- Hero section -->
+    <section class="hero-banner">
+      <h1>Welcome to your Private Showroom</h1>
+      <p>A private showroom for your diecast collection. Track your inventory, manage wishlists, and display every miniature masterpiece in one platform!</p>
+    </section>
+    <!-- Showroom Financial Analytics Dashboard -->
+    <section class="analytics-dashboard">
+      <div class="analytics-card" style="--card-glow: var(--accent-blue)">
+        <span class="analytics-label">Total Inventory</span>
+        <span class="analytics-value" id="analytic-inventory">0 items</span>
+        <span class="analytics-desc">Diecasts cataloged inside showroom</span>
+      </div>
+      <div class="analytics-card" style="--card-glow: var(--status-collection)">
+        <span class="analytics-label">Total Capital Spent</span>
+        <span class="analytics-value" id="analytic-capital">$0.00</span>
+        <span class="analytics-desc">Initial acquisition budget sum</span>
+      </div>
+      <div class="analytics-card" style="--card-glow: var(--accent-gold)">
+        <span class="analytics-label">Market Asset Value</span>
+        <span class="analytics-value" id="analytic-market">$0.00</span>
+        <span class="analytics-desc">Estimated portfolio current price</span>
+      </div>
+    </section>
+    <!-- Search, filter and actions -->
+    <section class="controls-panel">
+      <div class="controls-top">
+        <div class="search-wrapper">
+          <input type="text" class="search-input" id="search-box" placeholder="Search by name, brand, custom tags, or series...">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/>
+          </svg>
+        </div>
+        <div class="controls-actions">
+          <button class="btn btn-primary" id="btn-open-modal">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+            </svg>
+            Add Diecast
+          </button>
+        </div>
+      </div>
+      <!-- Dynamic Category Filter tabs -->
+      <div class="filter-panel">
+        <span class="filter-section-title">Ownership States</span>
+        <div class="filter-container" id="states-filter-container">
+          <!-- Standard status tabs will be populated here dynamically -->
+        </div>
+      </div>
+      <div class="filter-panel" style="border-top: none; padding-top: 0.5rem;">
+        <span class="filter-section-title">Custom Tag Filters</span>
+        <div class="filter-container" id="custom-filter-container">
+          <!-- Dynamic tag filters populated here -->
+        </div>
+      </div>
+    </section>
+    <!-- Showroom Catalog Grid -->
+    <section class="cards-grid" id="diecast-grid">
+      <!-- Dynamic elements populated via Javascript -->
+    </section>
+    <!-- Grid Empty State -->
+    <div class="empty-state" id="empty-state">
+      <span class="empty-icon">🔍</span>
+      <h3 class="empty-title">No Diecasts Found</h3>
+      <p class="empty-desc">We couldn't find matching models for your active filter or search keywords. Try adjusting your query.</p>
+    </div>
+    <!-- Exporter backup, Restore, and Currency Toggle Hub -->
+    <section class="utilities-hub">
+      <div class="utility-desc">
+        <h3 class="utility-title">Showroom Utility System</h3>
+        <p class="utility-subtitle">Backup database collections or change localized parameters.</p>
+      </div>
+      <div class="utility-buttons">
+        <!-- Multi-currency toggle -->
+        <div class="currency-toggle-wrapper">
+          <span class="currency-toggle-label">Currency Format:</span>
+          <span class="currency-toggle-label" style="font-weight: 800; color: #fff;">IDR (Rp)</span>
+          <label class="switch">
+            <input type="checkbox" id="currency-toggle">
+            <span class="slider"></span>
+          </label>
+          <span class="currency-toggle-label" style="font-weight: 800; color: #fff;">USD ($)</span>
+        </div>
+        <button class="btn btn-secondary" id="btn-export-json">
+          📥 Export JSON
+        </button>
+        <button class="btn btn-secondary" id="btn-import-json-trigger">
+          📤 Import JSON
+        </button>
+        <input type="file" id="import-json-input" class="hidden-file-input" accept=".json">
+      </div>
+    </section>
+  </main>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-logo">🏎️ BiMobil 64</div>
+    <p>&copy; 2026 BiMobil 64 Dashboard. Built for diecast enthusiasts with visual excellence.</p>
+  </footer>
+  <!-- Form Dialog Modal: Add/Edit Diecast -->
+  <div class="modal modal-overlay" id="formModal">
+    <div class="modal-container modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="form-modal-title">Add New Diecast</h3>
+        <button class="modal-close" id="btn-close-modal">&times;</button>
+      </div>
+      <form id="diecastForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="car-name">Model Name</label>
+            <input type="text" id="car-name" class="form-control" placeholder="e.g. Nissan Skyline GT-R BNR34" required>
+          </div>
+          <div class="form-row form-group">
+            <div>
+              <label class="form-label" for="car-brand">Manufacturer Brand</label>
+              <input type="text" id="car-brand" class="form-control" placeholder="e.g. Nissan, Lamborghini" required>
+            </div>
+            <div>
+              <label class="form-label" for="car-scale">Scale Format</label>
+              <input type="text" id="car-scale" class="form-control" value="1:64" required>
+            </div>
+          </div>
+          <div class="form-row form-group">
+            <div>
+              <label class="form-label" for="car-segment-select">Diecast Brand</label>
+              <select id="car-segment-select" class="form-control" required>
+                <option value="Hot Wheels">Hot Wheels</option>
+                <option value="Tomica">Tomica</option>
+                <option value="Matchbox">Matchbox</option>
+                <option value="Majorette">Majorette</option>
+                <option value="Lainnya">Other Brand (Custom)</option>
+              </select>
+              <input type="text" id="car-segment-custom" class="form-control" style="margin-top: 0.5rem; display: none;" placeholder="Enter custom brand name...">
+            </div>
+            <div>
+              <label class="form-label" for="car-class-select">Type / Class</label>
+              <select id="car-class-select" class="form-control" required>
+                <!-- Dynamic JS values loaded -->
+              </select>
+              <input type="text" id="car-class-custom" class="form-control" style="margin-top: 0.5rem; display: none;" placeholder="Enter custom class name...">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="car-series">Release Edition / Series Name</label>
+            <input type="text" id="car-series" class="form-control" placeholder="e.g. Boulevard Series, Boulevard Series 2026" required>
+          </div>
+          <div class="form-row form-group">
+            <div>
+              <label class="form-label" for="car-status">Showroom State</label>
+              <select id="car-status" class="form-control" required>
+                <option value="Collection">Collection</option>
+                <option value="Bucket Lists">Bucket Lists</option>
+                <option value="Booked">Booked</option>
+                <option value="Sold">Sold</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="car-condition">Card Condition</label>
+              <select id="car-condition" class="form-control" required>
+                <option value="Mint in Card">Mint in Card (MIC)</option>
+                <option value="Near Mint">Near Mint (90%+ Card)</option>
+                <option value="Loose with Box">Loose with Box</option>
+                <option value="Loose">Loose (Unboxed)</option>
+              </select>
+            </div>
+          </div>
+          <!-- Advanced Multi-Images Pipeline -->
+          <div class="form-group image-input-container" id="image-input-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label class="form-label" style="margin-bottom: 0;">Media Assets Pipeline (Multi-Photo Support)</label>
+              <span id="image-upload-status" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">(Optional - No images added)</span>
+            </div>
+            <div class="multi-image-container">
+              <div class="multi-image-inputs">
+                <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
+                  <button type="button" class="btn btn-secondary" id="btn-trigger-file" style="flex: 1; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">
+                    📁 Local Device File
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="btn-trigger-url" style="flex: 1; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">
+                    🌐 Web Image URL
+                  </button>
+                </div>
+                <input type="file" id="form-file-loader" class="hidden-file-input" accept="image/*" multiple style="display: none;">
+                <div id="url-input-wrapper" style="display: none; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <input type="url" id="form-url-loader" class="form-control" placeholder="https://example.com/photo.jpg" style="padding: 0.6rem 0.8rem; font-size: 0.85rem;">
+                  <button type="button" class="btn btn-primary" id="btn-add-img-url" style="padding: 0.6rem 1rem; font-size: 0.85rem;">Add</button>
+                </div>
+              </div>
+              <!-- Image previews with remove handles -->
+              <div class="image-preview-strip" id="form-image-preview-strip">
+                <!-- Thumbnails loaded dynamically -->
+              </div>
+            </div>
+          </div>
+          <!-- Optional Valuation Prices -->
+          <div class="form-row form-group">
+            <div>
+              <label class="form-label" for="formBuyPrice">Buy Price (<span class="currency-label-span">Rp</span>)</label>
+              <input type="number" id="formBuyPrice" class="form-control" min="0" step="0.01" placeholder="Optional (0 if blank)">
+            </div>
+            <div>
+              <label class="form-label" for="formMarketPrice">Current Market Value (<span class="currency-label-span">Rp</span>)</label>
+              <input type="number" id="formMarketPrice" class="form-control" min="0" step="0.01" placeholder="Optional (0 if blank)">
+            </div>
+          </div>
+          <!-- Custom Tags Select Grid -->
+          <div class="form-group">
+            <label class="form-label">Custom Showcase Tags</label>
+            <div class="tags-checkbox-container" id="modal-tags-checkbox-grid">
+              <!-- Custom filter checkboxes dynamic -->
+            </div>
+          </div>
+        </div>
+        <div class="form-footer modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-form">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveFormBtn">Save Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Collector Profile Modal -->
+  <div class="modal-overlay" id="profile-modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Collector Profile</h3>
+        <button class="modal-close" id="btn-close-profile-modal">&times;</button>
+      </div>
+      <form id="profile-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="profile-input-name">Collector Display Name</label>
+            <input type="text" id="profile-input-name" class="form-control" placeholder="e.g. John Doe" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profile-input-bio">Bio Status / Title</label>
+            <input type="text" id="profile-input-bio" class="form-control" placeholder="e.g. Hot Wheels Enthusiast" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="profile-input-avatar">Profile Avatar URL</label>
+            <input type="url" id="profile-input-avatar" class="form-control" placeholder="https://images.unsplash.com/..." required>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-profile-form">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Immersive Detail Pop-up Slider Modal -->
+  <div class="modal-overlay" id="detail-modal-overlay">
+    <div class="modal-container detail-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="detail-modal-title">Model Specification Card</h3>
+        <button class="modal-close" id="btn-close-detail-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Main image slider viewport -->
+        <div class="slider-wrapper">
+          <button class="slider-arrow slider-arrow-left" id="slider-prev-btn">&lt;</button>
+          <div id="slider-viewport" style="width: 100%; height: 100%;">
+            <!-- Images loaded dynamically -->
+          </div>
+          <button class="slider-arrow slider-arrow-right" id="slider-next-btn">&gt;</button>
+        </div>
+        <!-- Horizontal row thumbnail slots -->
+        <div class="thumbnails-strip" id="slider-thumbnails-strip">
+          <!-- Dynamic thumbs -->
+        </div>
+        <!-- Complete Specifications breakdown -->
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Model Name</span>
+            <span class="spec-value" id="spec-car-name">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Manufacturer Brand</span>
+            <span class="spec-value" id="spec-car-brand">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Diecast Brand</span>
+            <span class="spec-value" id="spec-car-segment">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Type / Class</span>
+            <span class="spec-value" id="spec-car-class">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Release Edition</span>
+            <span class="spec-value" id="spec-car-series">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Scale format</span>
+            <span class="spec-value" id="spec-car-scale">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Showroom State</span>
+            <span class="spec-value" id="spec-car-status">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Card Condition</span>
+            <span class="spec-value" id="spec-car-condition">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Acquisition Capital</span>
+            <span class="spec-value financial-value" id="spec-car-price-buy">-</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Current Market Value</span>
+            <span class="spec-value financial-value" id="spec-car-price-market">-</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn btn-secondary" id="btn-share-specs" style="background: rgba(147, 51, 234, 0.1); border-color: rgba(147, 51, 234, 0.3); color: #c084fc;">
+          📋 Copy Specification Card Txt
+        </button>
+        <button type="button" class="btn btn-secondary" id="btn-close-detail-modal-action">Close</button>
+      </div>
+    </div>
+  </div>
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+  <!-- Application Script Hub -->
+  <script>
+    function getValidImages(car) {
+      if (car.images && Array.isArray(car.images) && car.images.length > 0) {
+        const filtered = car.images.filter(img => img && typeof img === 'string' && img.trim() !== '');
+        if (filtered.length > 0) {
+          return filtered;
+        }
+      }
+      if (car.image && typeof car.image === 'string' && car.image.trim() !== '') {
+        return [car.image.trim()];
+      }
+      return [];
+    }
+    function getCardImage(car) {
+      const valid = getValidImages(car);
+      return valid.length > 0 ? valid[0] : '';
+    }
+    const defaultDiecasts = [
+      {
+        id: "skyline-r34-ff",
+        name: "Nissan Skyline GT-R BNR34",
+        brand: "Nissan",
+        scale: "1:64",
+        segment: "Hot Wheels",
+        class: "Premium",
+        series: "Fast & Furious Series",
+        status: "Collection",
+        condition: "Mint in Card",
+        buyPrice: 150000,
+        marketPrice: 280000,
+        tags: ["JDM", "Fast & Furious"],
+        loved: true,
+        pinned: true,
+        theme: "blue",
+        images: ["images/skyline_bnr34.png"]
+      },
+      {
+        id: "gallardo-lp570-ff",
+        name: "Lamborghini Gallardo LP 570",
+        brand: "Lamborghini",
+        scale: "1:64",
+        segment: "Hot Wheels",
+        class: "Premium",
+        series: "Fast & Furious Series",
+        status: "Bucket Lists",
+        condition: "Mint in Card",
+        buyPrice: 120000,
+        marketPrice: 190000,
+        tags: ["Supercars"],
+        loved: false,
+        pinned: false,
+        theme: "yellow",
+        images: ["images/gallardo_lp570.png"]
+      },
+      {
+        id: "mazda-rx7-ff",
+        name: "'95 Mazda RX7",
+        brand: "Mazda",
+        scale: "1:64",
+        segment: "Hot Wheels",
+        class: "Premium",
+        series: "Fast & Furious Series",
+        status: "Collection",
+        condition: "Loose with Box",
+        buyPrice: 135000,
+        marketPrice: 240000,
+        tags: ["JDM", "Rotary"],
+        loved: true,
+        pinned: false,
+        theme: "red",
+        images: ["images/mazda_rx7.png"]
+      }
+    ];
+    const defaultTags = ["JDM", "Supercars", "Rotary", "Fast & Furious", "Rare", "Boulevard"];
+    const defaultProfile = {
+      name: "Bimo Purwanto",
+      bio: "Ultimate 1:64 Collector",
+      avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80"
+    };
+    let diecasts = [];
+    let customTags = [];
+    let profile = {};
+    let currentFilterState = "All";
+    let currentFilterTag = "";
+    let searchQuery = "";
+    let currencyFormat = "USD";
+    const conversionRate = 16000;
+    let activeFormImages = [];
+    let editingCarId = null;
+    let sliderActiveIndex = 0;
+    let activeDetailCar = null;
+    const diecastGrid = document.getElementById("diecast-grid");
+    const emptyState = document.getElementById("empty-state");
+    const searchBox = document.getElementById("search-box");
+    const modalOverlay = document.getElementById("formModal");
+    const profileModalOverlay = document.getElementById("profile-modal-overlay");
+    const detailModalOverlay = document.getElementById("detail-modal-overlay");
+    const openModalBtn = document.getElementById("btn-open-modal");
+    const closeModalBtn = document.getElementById("btn-close-modal");
+    const cancelFormBtn = document.getElementById("btn-cancel-form");
+    const profileBadgeBtn = document.getElementById("profile-badge-btn");
+    const closeProfileModalBtn = document.getElementById("btn-close-profile-modal");
+    const cancelProfileBtn = document.getElementById("btn-cancel-profile-form");
+    const closeDetailModalBtn = document.getElementById("btn-close-detail-modal");
+    const closeDetailModalBtnAction = document.getElementById("btn-close-detail-modal-action");
+    const btnAddImgUrl = document.getElementById("btn-add-img-url");
+    const btnShareSpecs = document.getElementById("btn-share-specs");
+    const btnExportJson = document.getElementById("btn-export-json");
+    const btnImportJsonTrigger = document.getElementById("btn-import-json-trigger");
+    const importJsonInput = document.getElementById("import-json-input");
+    const currencyToggle = document.getElementById("currency-toggle");
+    const diecastForm = document.getElementById("diecastForm") || document.getElementById("diecast-form");
+    const profileForm = document.getElementById("profile-form");
+    const imageFileInput = document.getElementById("form-file-loader");
+    const imageUrlInput = document.getElementById("form-url-loader");
+    const formImagePreviewStrip = document.getElementById("form-image-preview-strip");
+    const segmentSelect = document.getElementById("car-segment-select");
+    const segmentCustomInput = document.getElementById("car-segment-custom");
+    const classSelect = document.getElementById("car-class-select");
+    const classCustomInput = document.getElementById("car-class-custom");
+    const navAvatar = document.getElementById("nav-avatar");
+    const navName = document.getElementById("nav-name");
+    const navBio = document.getElementById("nav-bio");
+    const statInventory = document.getElementById("analytic-inventory");
+    const statCapital = document.getElementById("analytic-capital");
+    const statMarket = document.getElementById("analytic-market");
+    function bootstrap() {
+      const savedTags = localStorage.getItem("bimobil64_custom_tags");
+      if (savedTags) {
+        try { customTags = JSON.parse(savedTags); } catch (e) { customTags = [...defaultTags]; }
+      } else {
+        customTags = [...defaultTags];
+        localStorage.setItem("bimobil64_custom_tags", JSON.stringify(customTags));
+      }
+      const savedProfile = localStorage.getItem("bimobil64_profile");
+      if (savedProfile) {
+        try { profile = JSON.parse(savedProfile); } catch (e) { profile = {...defaultProfile}; }
+      } else {
+        profile = {...defaultProfile};
+        localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
+      }
+      const savedCurrency = localStorage.getItem("bimobil64_currency");
+      if (savedCurrency) {
+        currencyFormat = savedCurrency;
+      } else {
+        currencyFormat = "USD";
+        localStorage.setItem("bimobil64_currency", currencyFormat);
+      }
+      currencyToggle.checked = (currencyFormat === "USD");
+      const savedDiecasts = localStorage.getItem("bimobil64_diecasts");
+      if (savedDiecasts) {
+        try {
+          diecasts = JSON.parse(savedDiecasts);
+          let migrated = false;
+          diecasts.forEach(item => {
+            if (item.segment === "A Segment") {
+              item.segment = "Hot Wheels";
+              migrated = true;
+            }
+            if (item.status === "Koleksi" || item.status === "koleksi") {
+              item.status = "Collection";
+              migrated = true;
+            }
+            if (item.status === "Wishlist" || item.status === "wishlist") {
+              item.status = "Bucket Lists";
+              migrated = true;
+            }
+            if (item.image && (!item.images || item.images.length === 0)) {
+              item.images = [item.image];
+              migrated = true;
+            }
+            if (!item.class) {
+              item.class = "Premium";
+              migrated = true;
+            }
+          });
+          if (migrated) {
+            saveToLocalStorage();
+          }
+        } catch (e) {
+          diecasts = [...defaultDiecasts];
+        }
+      } else {
+        diecasts = [...defaultDiecasts];
+        saveToLocalStorage();
+      }
+      setupGlobalEventListeners();
+      updateProfileUI();
+      updateCurrencyLabels();
+      renderFilters();
+      handleBrandChange();
+      renderCatalogGrid();
+      showToast("Showroom assets synchronized successfully!", "info");
+    }
+    function setupGlobalEventListeners() {
+      searchBox.addEventListener("input", (e) => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        renderCatalogGrid();
+      });
+      currencyToggle.addEventListener("change", (e) => {
+        const oldCurrency = currencyFormat;
+        currencyFormat = e.target.checked ? "USD" : "IDR";
+        localStorage.setItem("bimobil64_currency", currencyFormat);
+        updateCurrencyLabels();
+        convertOpenFormPriceFields(oldCurrency, currencyFormat);
+        updateAnalyticsValues();
+        renderCatalogGrid();
+        showToast(`Converted currency layout into ${currencyFormat}`, "info");
+      });
+      openModalBtn.addEventListener("click", () => {
+        editingCarId = null;
+        document.getElementById("form-modal-title").textContent = "Add New Diecast";
+        modalOverlay.classList.add("active");
+        resetForm();
+      });
+      closeModalBtn.addEventListener("click", () => modalOverlay.classList.remove("active"));
+      cancelFormBtn.addEventListener("click", () => modalOverlay.classList.remove("active"));
+      profileBadgeBtn.addEventListener("click", () => {
+        document.getElementById("profile-input-name").value = profile.name;
+        document.getElementById("profile-input-bio").value = profile.bio;
+        document.getElementById("profile-input-avatar").value = profile.avatar;
+        profileModalOverlay.classList.add("active");
+      });
+      closeProfileModalBtn.addEventListener("click", () => profileModalOverlay.classList.remove("active"));
+      cancelProfileBtn.addEventListener("click", () => profileModalOverlay.classList.remove("active"));
+      profileForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        profile.name = document.getElementById("profile-input-name").value.trim();
+        profile.bio = document.getElementById("profile-input-bio").value.trim();
+        profile.avatar = document.getElementById("profile-input-avatar").value.trim();
+        localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
+        updateProfileUI();
+        profileModalOverlay.classList.remove("active");
+        showToast("Collector profile updated!", "success");
+      });
+      imageFileInput.addEventListener("change", handleLocalFileImageUpload);
+      btnAddImgUrl.addEventListener("click", handleUrlImageUpload);
+      const btnTriggerFile = document.getElementById("btn-trigger-file");
+      if (btnTriggerFile) {
+        btnTriggerFile.addEventListener("click", () => {
+          imageFileInput.click();
+        });
+      }
+      const btnTriggerUrl = document.getElementById("btn-trigger-url");
+      const urlInputWrapper = document.getElementById("url-input-wrapper");
+      if (btnTriggerUrl) {
+        btnTriggerUrl.addEventListener("click", () => {
+          if (urlInputWrapper.style.display === "none" || !urlInputWrapper.style.display) {
+            urlInputWrapper.style.display = "flex";
+            imageUrlInput.focus();
+          } else {
+            urlInputWrapper.style.display = "none";
+          }
+        });
+      }
+      const saveFormBtn = document.getElementById("saveFormBtn");
+      if (saveFormBtn) {
+        saveFormBtn.addEventListener("click", () => {
+          diecastForm.requestSubmit();
+        });
+      }
+      segmentSelect.addEventListener("change", handleBrandChange);
+      classSelect.addEventListener("change", handleClassChange);
+      diecastForm.addEventListener("submit", handleFormSubmission);
+      closeDetailModalBtn.addEventListener("click", () => detailModalOverlay.classList.remove("active"));
+      closeDetailModalBtnAction.addEventListener("click", () => detailModalOverlay.classList.remove("active"));
+      document.getElementById("slider-prev-btn").addEventListener("click", () => navigateSlider(-1));
+      document.getElementById("slider-next-btn").addEventListener("click", () => navigateSlider(1));
+      btnShareSpecs.addEventListener("click", copySpecificationCard);
+      btnExportJson.addEventListener("click", exportShowroomJSON);
+      btnImportJsonTrigger.addEventListener("click", () => importJsonInput.click());
+      importJsonInput.addEventListener("change", importShowroomJSON);
+    }
+    function updateProfileUI() {
+      navAvatar.src = profile.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80";
+      navName.textContent = profile.name;
+      navBio.textContent = profile.bio;
+    }
+    function updateCurrencyLabels() {
+      const spans = document.querySelectorAll(".currency-label-span");
+      spans.forEach(span => {
+        span.textContent = currencyFormat === "USD" ? "$" : "Rp";
+      });
+    }
+    function formatValuation(amount) {
+      if (!amount || amount === 0) return currencyFormat === "USD" ? "$0.00" : "Rp 0";
+      let targetAmount = amount;
+      if (currencyFormat === "USD") {
+        targetAmount = amount / conversionRate;
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(targetAmount);
+      } else {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(targetAmount).replace(/\s/g, ' ');
+      }
+    }
+    // Prices are always stored canonically in IDR inside `diecasts`.
+    // These helpers convert between that canonical value and whatever
+    // currency is currently displayed/typed in the form inputs.
+    function toDisplayAmount(canonicalIdrAmount) {
+      const amt = Number(canonicalIdrAmount) || 0;
+      if (amt === 0) return 0;
+      if (currencyFormat === "USD") {
+        return Math.round((amt / conversionRate) * 100) / 100;
+      }
+      return Math.round(amt);
+    }
+    function toCanonicalAmount(displayAmount) {
+      const amt = Number(displayAmount) || 0;
+      if (amt === 0) return 0;
+      if (currencyFormat === "USD") {
+        return Math.round(amt * conversionRate);
+      }
+      return Math.round(amt);
+    }
+    // If the Add/Edit modal is open with values already typed when the
+    // user flips the currency switch, re-express those typed numbers in
+    // the new currency instead of leaving a stale/mismatched number.
+    function convertOpenFormPriceFields(oldCurrency, newCurrency) {
+      if (oldCurrency === newCurrency) return;
+      const buyInput = document.getElementById("formBuyPrice");
+      const marketInput = document.getElementById("formMarketPrice");
+      [buyInput, marketInput].forEach(input => {
+        if (!input || input.value === "") return;
+        const rawVal = Number(input.value) || 0;
+        const canonical = oldCurrency === "USD" ? rawVal * conversionRate : rawVal;
+        const displayVal = newCurrency === "USD"
+          ? Math.round((canonical / conversionRate) * 100) / 100
+          : Math.round(canonical);
+        input.value = displayVal;
+      });
+    }
+    function updateAnalyticsValues() {
+      statInventory.textContent = `${diecasts.length} unit${diecasts.length === 1 ? '' : 's'}`;
+      const totalCapital = diecasts.reduce((acc, car) => acc + (Number(car.buyPrice) || 0), 0);
+      const totalMarketValue = diecasts.reduce((acc, car) => acc + (Number(car.marketPrice) || 0), 0);
+      statCapital.textContent = formatValuation(totalCapital);
+      statMarket.textContent = formatValuation(totalMarketValue);
+    }
+    const brandSubClasses = {
+      "Hot Wheels": [
+        { value: "Premium", label: "Premium Line" },
+        { value: "Regular", label: "Regular (Basic)" },
+        { value: "Silver Series", label: "Silver Series / Themed" },
+        { value: "Treasure Hunt", label: "Treasure Hunt (TH)" },
+        { value: "Super Treasure Hunt", label: "Super Treasure Hunt (STH)" },
+        { value: "Red Line Club", label: "Red Line Club (RLC)" },
+        { value: "Lainnya", label: "Other Class (Custom)" }
+      ],
+      "Tomica": [
+        { value: "Regular", label: "Regular Red Box" },
+        { value: "Premium", label: "Tomica Premium" },
+        { value: "Limited Vintage", label: "Tomica Limited Vintage (TLV)" },
+        { value: "Dream Tomica", label: "Dream Tomica" },
+        { value: "Lainnya", label: "Other Class (Custom)" }
+      ],
+      "Matchbox": [
+        { value: "Regular", label: "Regular (Basic)" },
+        { value: "Moving Parts", label: "Moving Parts" },
+        { value: "Collector Series", label: "Collector Series" },
+        { value: "Lainnya", label: "Other Class (Custom)" }
+      ],
+      "Majorette": [
+        { value: "Regular", label: "Street Cars" },
+        { value: "Premium", label: "Premium Cars" },
+        { value: "Limited Edition", label: "Limited Edition / Racing" },
+        { value: "Lainnya", label: "Other Class (Custom)" }
+      ],
+      "Lainnya": [
+        { value: "Premium", label: "Premium / Collectors Model" },
+        { value: "Regular", label: "Regular / Basic" },
+        { value: "Lainnya", label: "Other Class (Custom)" }
+      ]
+    };
+    function handleBrandChange() {
+      const selectedBrand = segmentSelect.value;
+      if (selectedBrand === "Lainnya") {
+        segmentCustomInput.style.display = "block";
+        segmentCustomInput.required = true;
+      } else {
+        segmentCustomInput.style.display = "none";
+        segmentCustomInput.required = false;
+        segmentCustomInput.value = "";
+      }
+      const classes = brandSubClasses[selectedBrand] || brandSubClasses["Lainnya"];
+      classSelect.innerHTML = classes.map(c => `<option value="${c.value}">${c.label}</option>`).join("");
+      handleClassChange();
+    }
+    function handleClassChange() {
+      if (classSelect.value === "Lainnya") {
+        classCustomInput.style.display = "block";
+        classCustomInput.required = true;
+      } else {
+        classCustomInput.style.display = "none";
+        classCustomInput.required = false;
+        classCustomInput.value = "";
+      }
+    }
+    function renderFilters() {
+      const states = ["All", "Collection", "Bucket Lists", "Booked", "Sold", "Favorites"];
+      const statesContainer = document.getElementById("states-filter-container");
+      statesContainer.innerHTML = states.map(state => {
+        let count = 0;
+        if (state === "All") {
+          count = diecasts.length;
+        } else if (state === "Favorites") {
+          count = diecasts.filter(c => c.loved).length;
+        } else {
+          count = diecasts.filter(c => c.status === state).length;
+        }
+        const isActive = (currentFilterState === state && !currentFilterTag);
+        return `
+          <button class="filter-btn ${isActive ? 'active' : ''}" onclick="setMainFilter('${state}')">
+            ${state} <span class="filter-count">${count}</span>
+          </button>
+        `;
+      }).join("");
+      const customContainer = document.getElementById("custom-filter-container");
+      let tagButtonsHtml = customTags.map(tag => {
+        const count = diecasts.filter(c => c.tags && c.tags.includes(tag)).length;
+        const isActive = (currentFilterTag === tag);
+        return `
+          <button class="filter-btn ${isActive ? 'active' : ''}" onclick="setTagFilter('${tag}')" style="border-color: rgba(147, 51, 234, 0.25); color: ${isActive ? 'var(--bg-dark)' : '#c084fc'}; background: ${isActive ? '#c084fc' : 'rgba(147, 51, 234, 0.03)'}">
+            #${tag} <span class="filter-count" style="background: ${isActive ? 'rgba(0,0,0,0.1)' : 'rgba(147, 51, 234, 0.1)'}">${count}</span>
+          </button>
+        `;
+      }).join("");
+      tagButtonsHtml += `
+        <button class="filter-btn-add" onclick="addNewCustomFilter()">
+          + Add Tag Filter
+        </button>
+      `;
+      customContainer.innerHTML = tagButtonsHtml;
+      const tagsChecklistGrid = document.getElementById("modal-tags-checkbox-grid");
+      tagsChecklistGrid.innerHTML = customTags.map(tag => {
+        return `
+          <div class="tag-checkbox-item">
+            <input type="checkbox" id="form-tag-${tag}" value="${tag}" name="car-tags">
+            <label class="tag-checkbox-label" for="form-tag-${tag}">#${tag}</label>
+          </div>
+        `;
+      }).join("");
+    }
+    window.setMainFilter = function(state) {
+      currentFilterState = state;
+      currentFilterTag = "";
+      renderFilters();
+      renderCatalogGrid();
+    };
+    window.setTagFilter = function(tag) {
+      if (currentFilterTag === tag) {
+        currentFilterTag = "";
+      } else {
+        currentFilterTag = tag;
+        currentFilterState = "";
+      }
+      renderFilters();
+      renderCatalogGrid();
+    };
+    window.addNewCustomFilter = function() {
+      const newTag = prompt("Enter new filter tag name (e.g. Supercars, Retro, Tuner):");
+      if (newTag) {
+        const cleanedTag = newTag.trim();
+        if (cleanedTag === "") return;
+        if (customTags.map(t => t.toLowerCase()).includes(cleanedTag.toLowerCase())) {
+          showToast("This tag filter already exists!", "warning");
+          return;
+        }
+        customTags.push(cleanedTag);
+        localStorage.setItem("bimobil64_custom_tags", JSON.stringify(customTags));
+        renderFilters();
+        showToast(`New custom tag filter #${cleanedTag} injected!`, "success");
+      }
+    };
+    function renderFormPreviews() {
+      const statusEl = document.getElementById("image-upload-status");
+      if (statusEl) {
+        statusEl.textContent = activeFormImages.length > 0
+          ? `(${activeFormImages.length} image${activeFormImages.length > 1 ? 's' : ''} added)`
+          : "(Optional - No images added)";
+      }
+      if (activeFormImages.length === 0) {
+        formImagePreviewStrip.innerHTML = `
+          <div style="color: var(--text-muted); font-size: 0.75rem; text-align: center; width: 100%; padding: 0.5rem 0;">
+            No images loaded. Using dynamic fallback placeholder graphics.
+          </div>
+        `;
+        return;
+      }
+      formImagePreviewStrip.innerHTML = activeFormImages.map((imgSrc, index) => {
+        const isPinned = index === 0;
+        return `
+          <div class="preview-thumb-box" style="${isPinned ? 'border-color: var(--accent-gold); box-shadow: 0 0 8px rgba(250, 204, 21, 0.4);' : ''}">
+            <img class="preview-thumb-img" src="${imgSrc}" alt="Preview thumbnail">
+            ${isPinned ? '<span style="position: absolute; bottom: 2px; left: 2px; background: var(--accent-gold); color: var(--bg-dark); font-size: 0.65rem; font-weight: 800; padding: 0.1rem 0.3rem; border-radius: 4px; z-index: 5; pointer-events: none;">PINNED</span>' : ''}
+            <button type="button" class="preview-thumb-remove" onclick="removeFormImage(${index})">&times;</button>
+          </div>
+        `;
+      }).join("");
+    }
+    window.removeFormImage = function(index) {
+      activeFormImages.splice(index, 1);
+      renderFormPreviews();
+    };
+    function handleLocalFileImageUpload(e) {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+      let loadedCount = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          activeFormImages.push(event.target.result);
+          loadedCount++;
+          if (loadedCount === files.length) {
+            renderFormPreviews();
+            showToast(`Uploaded ${files.length} device photo(s) to pipeline`, "info");
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+      imageFileInput.value = "";
+    }
+    function handleUrlImageUpload() {
+      const urlValue = imageUrlInput.value.trim();
+      if (!urlValue) {
+        showToast("Please enter a valid image URL", "warning");
+        return;
+      }
+      activeFormImages.push(urlValue);
+      imageUrlInput.value = "";
+      renderFormPreviews();
+      showToast("Added web photo link to pipeline", "info");
+    }
+    function resetForm() {
+      diecastForm.reset();
+      activeFormImages = [];
+      renderFormPreviews();
+      segmentSelect.value = "Hot Wheels";
+      handleBrandChange();
+      const checkBoxes = document.querySelectorAll("input[name='car-tags']");
+      checkBoxes.forEach(cb => cb.checked = false);
+      const urlInputWrapper = document.getElementById("url-input-wrapper");
+      if (urlInputWrapper) {
+        urlInputWrapper.style.display = "none";
+      }
+    }
+    function handleFormSubmission(e) {
+      e.preventDefault();
+      const name = document.getElementById("car-name").value.trim();
+      const brand = document.getElementById("car-brand").value.trim();
+      const scale = document.getElementById("car-scale").value.trim();
+      const series = document.getElementById("car-series").value.trim();
+      const status = document.getElementById("car-status").value;
+      const condition = document.getElementById("car-condition").value;
+      const buyPriceRaw = document.getElementById("formBuyPrice").value;
+      const buyPrice = buyPriceRaw === "" ? 0 : toCanonicalAmount(buyPriceRaw);
+      const marketPriceRaw = document.getElementById("formMarketPrice").value;
+      const marketPrice = marketPriceRaw === "" ? 0 : toCanonicalAmount(marketPriceRaw);
+      const checkBoxes = document.querySelectorAll("input[name='car-tags']:checked");
+      const tags = Array.from(checkBoxes).map(cb => cb.value);
+      const finalSegment = segmentSelect.value === "Lainnya"
+        ? segmentCustomInput.value.trim()
+        : segmentSelect.value;
+      const finalClass = classSelect.value === "Lainnya"
+        ? classCustomInput.value.trim()
+        : classSelect.value;
+      let theme = "blue";
+      if (status === "Bucket Lists") {
+        theme = "yellow";
+      } else if (status === "Booked") {
+        theme = "green";
+      } else if (status === "Sold") {
+        theme = "red";
+      } else {
+        const lowerClass = finalClass.toLowerCase();
+        if (lowerClass.includes("super treasure hunt") || lowerClass.includes("sth") || lowerClass.includes("red line club") || lowerClass.includes("rlc")) {
+          theme = "red";
+        } else if (lowerClass.includes("treasure hunt") || lowerClass.includes("th")) {
+          theme = "green";
+        } else {
+          theme = "blue";
+        }
+      }
+      if (editingCarId) {
+        const idx = diecasts.findIndex(c => c.id === editingCarId);
+        if (idx !== -1) {
+          diecasts[idx].name = name;
+          diecasts[idx].brand = brand;
+          diecasts[idx].scale = scale;
+          diecasts[idx].segment = finalSegment;
+          diecasts[idx].class = finalClass;
+          diecasts[idx].series = series;
+          diecasts[idx].status = status;
+          diecasts[idx].condition = condition;
+          diecasts[idx].buyPrice = buyPrice;
+          diecasts[idx].marketPrice = marketPrice;
+          diecasts[idx].tags = tags;
+          diecasts[idx].theme = theme;
+          if (activeFormImages.length > 0) {
+            diecasts[idx].images = [...activeFormImages];
+          } else {
+            if (!diecasts[idx].images || diecasts[idx].images.length === 0) {
+              diecasts[idx].images = [];
+            }
+          }
+          showToast(`Updated specs sheet for ${name}`, "success");
+        }
+      } else {
+        const newCar = {
+          id: 'diecast-' + Date.now(),
+          name,
+          brand,
+          scale,
+          segment: finalSegment,
+          class: finalClass,
+          series,
+          status,
+          condition,
+          buyPrice,
+          marketPrice,
+          tags,
+          loved: false,
+          pinned: false,
+          theme,
+          images: activeFormImages.length > 0 ? [...activeFormImages] : []
+        };
+        diecasts.unshift(newCar);
+        showToast(`Success! Added ${name} into Showroom`, "success");
+      }
+      saveToLocalStorage();
+      modalOverlay.classList.remove("active");
+      resetForm();
+      renderFilters();
+      renderCatalogGrid();
+    }
+    function saveToLocalStorage() {
+      localStorage.setItem("bimobil64_diecasts", JSON.stringify(diecasts));
+    }
+    window.openEditCarModal = function(id, e) {
+      if (e) e.stopPropagation();
+      const car = diecasts.find(c => c.id === id);
+      if (!car) return;
+      editingCarId = id;
+      document.getElementById("form-modal-title").textContent = "Modify Diecast Details";
+      resetForm();
+      document.getElementById("car-name").value = car.name;
+      document.getElementById("car-brand").value = car.brand;
+      document.getElementById("car-scale").value = car.scale;
+      document.getElementById("car-series").value = car.series;
+      document.getElementById("car-status").value = car.status;
+      document.getElementById("car-condition").value = car.condition;
+      document.getElementById("formBuyPrice").value = car.buyPrice ? toDisplayAmount(car.buyPrice) : "";
+      document.getElementById("formMarketPrice").value = car.marketPrice ? toDisplayAmount(car.marketPrice) : "";
+      const standardBrands = ["Hot Wheels", "Tomica", "Matchbox", "Majorette"];
+      if (standardBrands.includes(car.segment)) {
+        segmentSelect.value = car.segment;
+        segmentCustomInput.style.display = "none";
+        segmentCustomInput.required = false;
+      } else {
+        segmentSelect.value = "Lainnya";
+        segmentCustomInput.style.display = "block";
+        segmentCustomInput.value = car.segment;
+        segmentCustomInput.required = true;
+      }
+      const currentBrand = segmentSelect.value;
+      const options = brandSubClasses[currentBrand] || brandSubClasses["Lainnya"];
+      classSelect.innerHTML = options.map(c => `<option value="${c.value}">${c.label}</option>`).join("");
+      const isStandardClass = options.map(o => o.value).includes(car.class);
+      if (isStandardClass) {
+        classSelect.value = car.class;
+        classCustomInput.style.display = "none";
+        classCustomInput.required = false;
+      } else {
+        classSelect.value = "Lainnya";
+        classCustomInput.style.display = "block";
+        classCustomInput.value = car.class;
+        classCustomInput.required = true;
+      }
+      if (car.tags && car.tags.length > 0) {
+        car.tags.forEach(tag => {
+          const cb = document.getElementById(`form-tag-${tag}`);
+          if (cb) cb.checked = true;
+        });
+      }
+      activeFormImages = getValidImages(car);
+      renderFormPreviews();
+      modalOverlay.classList.add("active");
+    };
+    window.deleteCarRecord = function(id, e) {
+      if (e) e.stopPropagation();
+      const car = diecasts.find(c => c.id === id);
+      if (!car) return;
+      if (confirm(`Remove "${car.name}" permanently from your Showroom inventory?`)) {
+        diecasts = diecasts.filter(c => c.id !== id);
+        saveToLocalStorage();
+        renderFilters();
+        renderCatalogGrid();
+        showToast("Car item removed from database", "warning");
+      }
+    };
+    window.toggleLoveCar = function(id, e) {
+      if (e) e.stopPropagation();
+      const idx = diecasts.findIndex(c => c.id === id);
+      if (idx !== -1) {
+        diecasts[idx].loved = !diecasts[idx].loved;
+        saveToLocalStorage();
+        renderFilters();
+        renderCatalogGrid();
+        showToast(diecasts[idx].loved ? "Added to Favorites Collection" : "Removed from Favorites", "info");
+      }
+    };
+    window.togglePinCar = function(id, e) {
+      if (e) e.stopPropagation();
+      const idx = diecasts.findIndex(c => c.id === id);
+      if (idx !== -1) {
+        diecasts[idx].pinned = !diecasts[idx].pinned;
+        saveToLocalStorage();
+        renderFilters();
+        renderCatalogGrid();
+        showToast(diecasts[idx].pinned ? "Pinned to top showcase" : "Unpinned from top showcase", "info");
+      }
+    };
+    function generateFallbackSVG(brand, theme) {
+      const themeColors = {
+        blue: "#3b82f6",
+        yellow: "#f59e0b",
+        red: "#ef4444",
+        green: "#10b981"
+      };
+      const color = themeColors[theme] || themeColors.blue;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+        <rect width="100%" height="100%" fill="#0a0d18"/>
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#0a0d18" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#glow)"/>
+        <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="64" opacity="0.8">🏎️</text>
+        <text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-size="18" fill="#f8fafc" font-weight="700" opacity="0.9">${brand.toUpperCase()}</text>
+        <text x="50%" y="68%" dominant-baseline="middle" text-anchor="middle" font-family="'Outfit', sans-serif" font-size="12" fill="${color}" letter-spacing="2" font-weight="600" opacity="0.7">NO PHOTO AVAILABLE</text>
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+    window.openCarDetailSlider = function(id) {
+      const car = diecasts.find(c => c.id === id);
+      if (!car) return;
+      activeDetailCar = car;
+      sliderActiveIndex = 0;
+      document.getElementById("detail-modal-title").textContent = car.name;
+      const sliderViewport = document.getElementById("slider-viewport");
+      const thumbsStrip = document.getElementById("slider-thumbnails-strip");
+      const validImages = getValidImages(car);
+      const imagesList = validImages.length > 0
+        ? validImages
+        : [generateFallbackSVG(car.brand, car.theme)];
+      sliderViewport.innerHTML = imagesList.map((img, index) => {
+        return `<img class="slider-img ${index === 0 ? 'active' : ''}" id="slider-img-${index}" src="${img}" alt="${car.name}">`;
+      }).join("");
+      thumbsStrip.innerHTML = imagesList.map((img, index) => {
+        return `
+          <div class="thumb-box ${index === 0 ? 'active' : ''}" id="slider-thumb-${index}" onclick="setSliderImageIndex(${index})">
+            <img class="thumb-img" src="${img}" alt="thumbnail">
+          </div>
+        `;
+      }).join("");
+      const arrows = document.querySelectorAll(".slider-arrow");
+      arrows.forEach(arr => {
+        arr.style.display = imagesList.length > 1 ? "flex" : "none";
+      });
+      document.getElementById("spec-car-name").textContent = car.name;
+      document.getElementById("spec-car-brand").textContent = car.brand;
+      document.getElementById("spec-car-segment").textContent = car.segment;
+      document.getElementById("spec-car-class").textContent = car.class;
+      document.getElementById("spec-car-series").textContent = car.series;
+      document.getElementById("spec-car-scale").textContent = car.scale;
+      document.getElementById("spec-car-condition").textContent = car.condition;
+      document.getElementById("spec-car-price-buy").textContent = formatValuation(car.buyPrice);
+      document.getElementById("spec-car-price-market").textContent = formatValuation(car.marketPrice);
+      const statusEl = document.getElementById("spec-car-status");
+      statusEl.textContent = car.status;
+      statusEl.className = "spec-value highlighted-status";
+      statusEl.classList.add(car.status === "Bucket Lists" ? "status-bucket" : car.status === "Booked" ? "status-booked" : car.status === "Sold" ? "status-sold" : "status-collection");
+      detailModalOverlay.classList.add("active");
+    };
+    window.setSliderImageIndex = function(index) {
+      const validImages = getValidImages(activeDetailCar);
+      const imagesList = validImages.length > 0
+        ? validImages
+        : [generateFallbackSVG(activeDetailCar.brand, activeDetailCar.theme)];
+      if (index < 0 || index >= imagesList.length) return;
+      document.querySelectorAll(".slider-img").forEach(img => img.classList.remove("active"));
+      document.querySelectorAll(".thumb-box").forEach(t => t.classList.remove("active"));
+      sliderActiveIndex = index;
+      document.getElementById(`slider-img-${index}`).classList.add("active");
+      document.getElementById(`slider-thumb-${index}`).classList.add("active");
+    };
+    function navigateSlider(direction) {
+      if (!activeDetailCar) return;
+      const validImages = getValidImages(activeDetailCar);
+      const imagesList = validImages.length > 0
+        ? validImages
+        : [generateFallbackSVG(activeDetailCar.brand, activeDetailCar.theme)];
+      let targetIdx = sliderActiveIndex + direction;
+      if (targetIdx >= imagesList.length) {
+        targetIdx = 0;
+      } else if (targetIdx < 0) {
+        targetIdx = imagesList.length - 1;
+      }
+      setSliderImageIndex(targetIdx);
+    }
+    function copySpecificationCard() {
+      if (!activeDetailCar) return;
+      const car = activeDetailCar;
+      const buyFormatted = formatValuation(car.buyPrice);
+      const marketFormatted = formatValuation(car.marketPrice);
+      const specSheetText = `🏎️ *${car.name.toUpperCase()}* 🏎️
+-----------------------------------
+🏷️ Manufacturer: ${car.brand}
+📦 Diecast Brand: ${car.segment} (${car.class})
+📅 Series: ${car.series}
+📏 Scale Format: ${car.scale}
+📊 Condition: ${car.condition}
+💰 Capital Invested: ${buyFormatted}
+📈 Est. Market Value: ${marketFormatted}
+-----------------------------------
+📢 Status: [${car.status.toUpperCase()}]
+👤 Showroom: ${profile.name}'s Showroom
+_Shared via BiMobil 64 Showcase Hub_`;
+      navigator.clipboard.writeText(specSheetText).then(() => {
+        showToast("Spec sheet copied to clipboard!", "success");
+      }).catch(err => {
+        console.error("Clipboard copy error:", err);
+        showToast("Failed copying text to clipboard", "warning");
+      });
+    }
+    function exportShowroomJSON() {
+      const dataToExport = {
+        generator: "BiMobil 64 Showcase Hub",
+        timestamp: Date.now(),
+        profile: profile,
+        customTags: customTags,
+        currencyFormat: currencyFormat,
+        diecasts: diecasts
+      };
+      const jsonString = JSON.stringify(dataToExport, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const blobUrl = URL.createObjectURL(blob);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", blobUrl);
+      downloadAnchor.setAttribute("download", `bimobil64_showroom_backup_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      URL.revokeObjectURL(blobUrl);
+      showToast("Showroom assets backup file downloaded!", "success");
+    }
+    function importShowroomJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const importedObj = JSON.parse(event.target.result);
+          if (!importedObj.diecasts || !Array.isArray(importedObj.diecasts)) {
+            throw new Error("Invalid json layout schema format.");
+          }
+          diecasts = importedObj.diecasts;
+          if (importedObj.profile) profile = importedObj.profile;
+          if (importedObj.customTags) customTags = importedObj.customTags;
+          if (importedObj.currencyFormat) {
+            currencyFormat = importedObj.currencyFormat;
+            currencyToggle.checked = (currencyFormat === "USD");
+          }
+          saveToLocalStorage();
+          localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
+          localStorage.setItem("bimobil64_custom_tags", JSON.stringify(customTags));
+          localStorage.setItem("bimobil64_currency", currencyFormat);
+          updateProfileUI();
+          updateCurrencyLabels();
+          renderFilters();
+          renderCatalogGrid();
+          showToast("Database successfully restored!", "success");
+        } catch (err) {
+          console.error("JSON Import Error:", err);
+          showToast("Failed to restore: Invalid backup file.", "warning");
+        }
+      };
+      reader.readAsText(file);
+      importJsonInput.value = "";
+    }
+    function showToast(message, type = "info") {
+      const toastContainer = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      let iconText = "ℹ️";
+      let typeClass = "info";
+      if (type === "success") {
+        iconText = "✓";
+        typeClass = "success";
+      } else if (type === "warning") {
+        iconText = "⚠";
+        typeClass = "warning";
+      }
+      toast.innerHTML = `
+        <div class="toast-icon ${typeClass}">${iconText}</div>
+        <div class="toast-msg">${message}</div>
+      `;
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add("active");
+      }, 10);
+      setTimeout(() => {
+        toast.classList.remove("active");
+        setTimeout(() => {
+          toast.remove();
+        }, 400);
+      }, 3000);
+    }
+    function renderCatalogGrid() {
+      let filtered = diecasts.filter(car => {
+        let mainStateMatch = false;
+        if (currentFilterState === "All" || !currentFilterState) {
+          mainStateMatch = true;
+        } else if (currentFilterState === "Favorites") {
+          mainStateMatch = car.loved;
+        } else {
+          mainStateMatch = (car.status === currentFilterState);
+        }
+        let tagMatch = true;
+        if (currentFilterTag) {
+          tagMatch = car.tags && car.tags.includes(currentFilterTag);
+        }
+        let searchMatch = true;
+        if (searchQuery) {
+          searchMatch = car.name.toLowerCase().includes(searchQuery) ||
+            car.brand.toLowerCase().includes(searchQuery) ||
+            car.segment.toLowerCase().includes(searchQuery) ||
+            car.series.toLowerCase().includes(searchQuery) ||
+            (car.class && car.class.toLowerCase().includes(searchQuery)) ||
+            (car.tags && car.tags.some(t => t.toLowerCase().includes(searchQuery)));
+        }
+        return mainStateMatch && tagMatch && searchMatch;
+      });
+      filtered.sort((a, b) => {
+        const aPinned = a.pinned ? 1 : 0;
+        const bPinned = b.pinned ? 1 : 0;
+        return bPinned - aPinned;
+      });
+      updateAnalyticsValues();
+      if (filtered.length === 0) {
+        diecastGrid.innerHTML = "";
+        emptyState.style.display = "flex";
+        return;
+      }
+      emptyState.style.display = "none";
+      const cardsHtml = filtered.map(car => {
+        const themeGlows = {
+          blue: {
+            border: "rgba(59, 130, 246, 0.4)",
+            shadow: "rgba(59, 130, 246, 0.25)",
+            badge: "rgba(59, 130, 246, 0.15)"
+          },
+          yellow: {
+            border: "rgba(245, 158, 11, 0.4)",
+            shadow: "rgba(245, 158, 11, 0.25)",
+            badge: "rgba(245, 158, 11, 0.15)"
+          },
+          red: {
+            border: "rgba(239, 68, 68, 0.4)",
+            shadow: "rgba(239, 68, 68, 0.25)",
+            badge: "rgba(239, 68, 68, 0.15)"
+          },
+          green: {
+            border: "rgba(16, 185, 129, 0.4)",
+            shadow: "rgba(16, 185, 129, 0.25)",
+            badge: "rgba(16, 185, 129, 0.15)"
+          }
+        };
+        const glow = themeGlows[car.theme] || themeGlows.blue;
+        const statusClass = car.status.toLowerCase().replace(/\s+/g, '-');
+        const cardImgSrc = getCardImage(car);
+        const classLabel = car.class || 'Premium';
+        const classTagStyle = `tag-class-${classLabel.toLowerCase().replace(/\s+/g, '-')}`;
+        const tagsHtml = car.tags ? car.tags.map(t => `<span class="card-tag custom-tag-badge">#${t}</span>`).join("") : "";
+        const marketFormatted = formatValuation(car.marketPrice);
+        return `
+          <article class="card ${car.pinned ? 'pinned-card' : ''}"
+              onclick="openCarDetailSlider('${car.id}')"
+              style="
+                --card-border-glow: ${glow.border};
+                --card-shadow-glow: 0 12px 35px ${glow.shadow};
+                --card-badge-color: ${glow.badge};
+              ">
+            <!-- Media section -->
+            <div class="card-image-wrapper card-gallery" style="${cardImgSrc ? `background-image: url('${cardImgSrc}');` : 'background: #090e1a;'}">
+              ${cardImgSrc
+                ? `<img class="card-img" src="${cardImgSrc}" alt="${car.name}" loading="lazy">`
+                : `
+                <div class="card-image-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #0c1020; gap: 0.5rem;">
+                  <span style="font-size: 2.2rem; filter: grayscale(0.2);">🏎️</span>
+                  <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">No Photo</span>
+                </div>
+                `
+              }
+              <div class="card-image-glow"></div>
+              <!-- State indicator overlays -->
+              <span class="card-status-badge ${statusClass}">${car.status}</span>
+              <!-- Badges Controls Overlay -->
+              <div class="card-top-controls">
+                <button class="card-badge-btn ${car.loved ? 'active-love' : ''}"
+                    onclick="toggleLoveCar('${car.id}', event)"
+                    title="Favorite Love Status">
+                  ❤️
+                </button>
+                <button class="card-badge-btn ${car.pinned ? 'active-pin' : ''}"
+                    onclick="togglePinCar('${car.id}', event)"
+                    title="Pin to Top of Showroom">
+                  📌
+                </button>
+              </div>
+            </div>
+            <!-- Info details contents -->
+            <div class="card-content">
+              <div class="card-tags">
+                <span class="card-tag">${car.segment}</span>
+                <span class="card-tag ${classTagStyle}">${classLabel}</span>
+                ${tagsHtml}
+              </div>
+              <h2 class="card-title">${car.name}</h2>
+              <div class="card-details">
+                <div class="detail-group">
+                  <span class="detail-label">Manufacturer</span>
+                  <span class="detail-value">${car.brand}</span>
+                </div>
+                <div class="detail-group" style="align-items: flex-end;">
+                  <span class="detail-label">Market Value</span>
+                  <span class="detail-value financial-value">${marketFormatted}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Trigger overlays actions -->
+            <div class="card-actions">
+              <button class="action-icon-btn btn-edit" onclick="openEditCarModal('${car.id}', event)" title="Modify details">
+                ✏️
+              </button>
+              <button class="action-icon-btn btn-delete" onclick="deleteCarRecord('${car.id}', event)" title="Remove item">
+                🗑️
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+      diecastGrid.innerHTML = cardsHtml;
+    }
+    window.addEventListener("DOMContentLoaded", bootstrap);
+  </script>
+</body>
+</html>
