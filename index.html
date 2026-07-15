@@ -448,7 +448,12 @@
           </div>
           <div class="form-group">
             <label class="form-label" for="profile-input-avatar">Profile Avatar URL</label>
-            <input type="url" id="profile-input-avatar" class="form-control" placeholder="https://images.unsplash.com/..." required>
+            <input type="url" id="profile-input-avatar" class="form-control" placeholder="https://images.unsplash.com/...">
+          </div>
+          <div style="text-align: center; margin: 0.75rem 0; font-size: 0.8rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1px;">— OR —</div>
+          <div class="form-group">
+            <label class="form-label" for="profile-input-file">Upload from Device / Gallery</label>
+            <input type="file" id="profile-input-file" class="form-control" accept="image/*" style="padding: 0.5rem;">
           </div>
         </div>
         <div class="form-footer">
@@ -624,6 +629,7 @@
     let editingCarId = null;
     let sliderActiveIndex = 0;
     let activeDetailCar = null;
+    let profileAvatarBase64 = "";
     const diecastGrid = document.getElementById("diecast-grid");
     const emptyState = document.getElementById("empty-state");
     const searchBox = document.getElementById("search-box");
@@ -750,21 +756,94 @@
       });
       closeModalBtn.addEventListener("click", () => modalOverlay.classList.remove("active"));
       cancelFormBtn.addEventListener("click", () => modalOverlay.classList.remove("active"));
+      function resizeProfileImage(file, callback) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            const max_size = 200;
+            if (width > height) {
+              if (width > max_size) {
+                height = Math.round((height * max_size) / width);
+                width = max_size;
+              }
+            } else {
+              if (height > max_size) {
+                width = Math.round((width * max_size) / height);
+                height = max_size;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            callback(canvas.toDataURL("image/jpeg", 0.85));
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+      function resetProfileFormState() {
+        profileAvatarBase64 = "";
+        const fileInput = document.getElementById("profile-input-file");
+        if (fileInput) fileInput.value = "";
+      }
       profileBadgeBtn.addEventListener("click", () => {
+        resetProfileFormState();
         document.getElementById("profile-input-name").value = profile.name;
         document.getElementById("profile-input-bio").value = profile.bio;
-        document.getElementById("profile-input-avatar").value = profile.avatar;
+        if (profile.avatar && (profile.avatar.startsWith("data:") || profile.avatar.startsWith("blob:"))) {
+          profileAvatarBase64 = profile.avatar;
+          document.getElementById("profile-input-avatar").value = "";
+        } else {
+          document.getElementById("profile-input-avatar").value = profile.avatar || "";
+        }
         profileModalOverlay.classList.add("active");
       });
-      closeProfileModalBtn.addEventListener("click", () => profileModalOverlay.classList.remove("active"));
-      cancelProfileBtn.addEventListener("click", () => profileModalOverlay.classList.remove("active"));
+      document.getElementById("profile-input-file").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          resizeProfileImage(file, (base64) => {
+            profileAvatarBase64 = base64;
+            document.getElementById("profile-input-avatar").value = "";
+          });
+        } else {
+          profileAvatarBase64 = "";
+        }
+      });
+      document.getElementById("profile-input-avatar").addEventListener("input", (e) => {
+        if (e.target.value.trim() !== "") {
+          const fileInput = document.getElementById("profile-input-file");
+          if (fileInput) fileInput.value = "";
+          profileAvatarBase64 = "";
+        }
+      });
+      closeProfileModalBtn.addEventListener("click", () => {
+        resetProfileFormState();
+        profileModalOverlay.classList.remove("active");
+      });
+      cancelProfileBtn.addEventListener("click", () => {
+        resetProfileFormState();
+        profileModalOverlay.classList.remove("active");
+      });
       profileForm.addEventListener("submit", (e) => {
         e.preventDefault();
-        profile.name = document.getElementById("profile-input-name").value.trim();
-        profile.bio = document.getElementById("profile-input-bio").value.trim();
-        profile.avatar = document.getElementById("profile-input-avatar").value.trim();
+        const nameVal = document.getElementById("profile-input-name").value.trim();
+        const bioVal = document.getElementById("profile-input-bio").value.trim();
+        const avatarUrlVal = document.getElementById("profile-input-avatar").value.trim();
+        if (!profileAvatarBase64 && !avatarUrlVal) {
+          showToast("Please provide a profile avatar URL or upload a file!", "warning");
+          return;
+        }
+        profile.name = nameVal;
+        profile.bio = bioVal;
+        profile.avatar = profileAvatarBase64 ? profileAvatarBase64 : avatarUrlVal;
         localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
         updateProfileUI();
+        resetProfileFormState();
         profileModalOverlay.classList.remove("active");
         showToast("Collector profile updated!", "success");
       });
