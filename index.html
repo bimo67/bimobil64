@@ -10,8 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- CSS Styles -->
 <style>
-:root { --bg-dark: #050814; --bg-card: rgba(13, 20, 38, 0.45); --bg-card-hover: rgba(22, 32, 60, 0.7); --border-color: rgba(255, 255, 255, 0.08); --border-hover: rgba(255, 255, 255, 0.2); --text-primary: #f8fafc; --text-secondary: #94a3b8; --text-muted: #627288; --accent-blue: #3b82f6; --accent-blue-glow: rgba(59, 130, 246, 0.2); --status-collection: #10b981; --status-collection-glow: rgba(16, 185, 129, 0.15); --status-bucket: #06b6d4; --status-bucket-glow: rgba(6, 182, 212, 0.15); --status-booked: #f59e0b; --status-booked-glow: rgba(245, 158, 11, 0.15); --status-sold: #ef4444; --status-sold-glow: rgba(239, 68, 68, 0.15); --accent-pink: #ec4899; --accent-pink-glow: rgba(236, 72, 153, 0.25); --accent-gold: #facc15; --accent-gold-glow: rgba(250, 204, 21, 0.25); --font-main: 'Outfit', sans-serif; --font-title: 'Space Grotesk', sans-serif; --font-ui: 'Plus Jakarta Sans', sans-serif; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); --blur: blur(12px); }
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+:root { --bg-dark: #050814; --bg-card: rgba(13, 20, 38, 0.45); --bg-card-hover: rgba(22, 32, 60, 0.7); --border-color: rgba(255, 255, 255, 0.08); --border-hover: rgba(255, 255, 255, 0.2); --text-primary: #f8fafc; --text-secondary: #94a3b8; --text-muted: #627288; --accent-blue: #3b82f6; --accent-blue-glow: rgba(59, 130, 246, 0.2); --status-collection: #10b981; --status-collection-glow: rgba(16, 185, 129, 0.15); --status-bucket: #06b6d4; --status-bucket-glow: rgba(6, 182, 212, 0.15); --status-booked: #f59e0b; --status-booked-glow: rgba(245, 158, 11, 0.15); --status-sold: #ef4444; --status-sold-glow: rgba(239, 68, 68, 0.15); --accent-pink: #ec4899; --accent-pink-glow: rgba(236, 72, 153, 0.25); --accent-gold: #facc15; --accent-gold-glow: rgba(250, 204, 21, 0.25); --font-main: 'Lexend', sans-serif; --font-title: 'Lexend', sans-serif; --font-ui: 'Lexend', sans-serif; --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); --blur: blur(12px); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Lexend', sans-serif !important; }
 body { background-color: var(--bg-dark); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; position: relative; }
 .glow-orbs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; pointer-events: none; }
 .orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.1; transition: var(--transition); }
@@ -347,18 +348,18 @@ Add Diecast
 <div>
 <label class="form-label" for="car-segment-select">Diecast Brand</label>
 <select id="car-segment-select" class="form-control" required>
-  <option value="Hot Wheels">Hot Wheels</option>
-  <option value="Tomica">Tomica</option>
-  <option value="Matchbox">Matchbox</option>
-  <option value="Majorette">Majorette</option>
-  <option value="Lainnya">Other Brand (Custom)</option>
+<option value="Hot Wheels">Hot Wheels</option>
+<option value="Tomica">Tomica</option>
+<option value="Matchbox">Matchbox</option>
+<option value="Majorette">Majorette</option>
+<option value="Lainnya">Other Brand (Custom)</option>
 </select>
 <input type="text" id="car-segment-custom" class="form-control" style="margin-top: 0.5rem; display: none;" placeholder="Enter custom brand name...">
 </div>
 <div>
 <label class="form-label" for="car-class-select">Type / Class</label>
 <select id="car-class-select" class="form-control" required>
-  <!-- Dynamic JS values loaded -->
+<!-- Dynamic JS values loaded -->
 </select>
 <input type="text" id="car-class-custom" class="form-control" style="margin-top: 0.5rem; display: none;" placeholder="Enter custom class name...">
 </div>
@@ -371,19 +372,19 @@ Add Diecast
 <div>
 <label class="form-label" for="car-status">Showroom State</label>
 <select id="car-status" class="form-control" required>
-  <option value="Collection">Collection</option>
-  <option value="Bucket Lists">Bucket Lists</option>
-  <option value="Booked">Booked</option>
-  <option value="Sold">Sold</option>
+<option value="Collection">Collection</option>
+<option value="Bucket Lists">Bucket Lists</option>
+<option value="Booked">Booked</option>
+<option value="Sold">Sold</option>
 </select>
 </div>
 <div>
 <label class="form-label" for="car-condition">Card Condition</label>
 <select id="car-condition" class="form-control" required>
-  <option value="Mint in Card">Mint in Card (MIC)</option>
-  <option value="Near Mint">Near Mint (90%+ Card)</option>
-  <option value="Loose with Box">Loose with Box</option>
-  <option value="Loose">Loose (Unboxed)</option>
+<option value="Mint in Card">Mint in Card (MIC)</option>
+<option value="Near Mint">Near Mint (90%+ Card)</option>
+<option value="Loose with Box">Loose with Box</option>
+<option value="Loose">Loose (Unboxed)</option>
 </select>
 </div>
 </div>
@@ -395,23 +396,23 @@ Add Diecast
 </div>
 <div class="multi-image-container">
 <div class="multi-image-inputs">
-  <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
-  <button type="button" class="btn btn-secondary" id="btn-trigger-file" style="flex: 1; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">
-  📁 Local Device File
-  </button>
-  <button type="button" class="btn btn-secondary" id="btn-trigger-url" style="flex: 1; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">
-  🌐 Web Image URL
-  </button>
-  </div>
-  <input type="file" id="form-file-loader" class="hidden-file-input" accept="image/*" multiple style="display: none;">
-  <div id="url-input-wrapper" style="display: none; gap: 0.5rem; margin-bottom: 0.5rem;">
-  <input type="url" id="form-url-loader" class="form-control" placeholder="https://example.com/photo.jpg" style="padding: 0.6rem 0.8rem; font-size: 0.85rem;">
-  <button type="button" class="btn btn-primary" id="btn-add-img-url" style="padding: 0.6rem 1rem; font-size: 0.85rem;">Add</button>
-  </div>
+<div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
+<button type="button" class="btn btn-secondary" id="btn-trigger-file" style="flex: 1; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">
+📁 Local Device File
+</button>
+<button type="button" class="btn btn-secondary" id="btn-trigger-url" style="flex: 1; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">
+🌐 Web Image URL
+</button>
+</div>
+<input type="file" id="form-file-loader" class="hidden-file-input" accept="image/*" multiple style="display: none;">
+<div id="url-input-wrapper" style="display: none; gap: 0.5rem; margin-bottom: 0.5rem;">
+<input type="url" id="form-url-loader" class="form-control" placeholder="https://example.com/photo.jpg" style="padding: 0.6rem 0.8rem; font-size: 0.85rem;">
+<button type="button" class="btn btn-primary" id="btn-add-img-url" style="padding: 0.6rem 1rem; font-size: 0.85rem;">Add</button>
+</div>
 </div>
 <!-- Image previews with remove handles -->
 <div class="image-preview-strip" id="form-image-preview-strip">
-  <!-- Thumbnails loaded dynamically -->
+<!-- Thumbnails loaded dynamically -->
 </div>
 </div>
 </div>
@@ -779,13 +780,13 @@ let height = img.height;
 const max_size = 200;
 if (width > height) {
 if (width > max_size) {
-  height = Math.round((height * max_size) / width);
-  width = max_size;
+height = Math.round((height * max_size) / width);
+width = max_size;
 }
 } else {
 if (height > max_size) {
-  width = Math.round((width * max_size) / height);
-  height = max_size;
+width = Math.round((width * max_size) / height);
+height = max_size;
 }
 }
 canvas.width = width;
@@ -1607,64 +1608,64 @@ return `
 <article class="card ${car.pinned ? 'pinned-card' : ''}"
 onclick="openCarDetailSlider('${car.id}')"
 style="
-  --card-border-glow: ${glow.border};
-  --card-shadow-glow: 0 12px 35px ${glow.shadow};
-  --card-badge-color: ${glow.badge};
+--card-border-glow: ${glow.border};
+--card-shadow-glow: 0 12px 35px ${glow.shadow};
+--card-badge-color: ${glow.badge};
 ">
 <!-- Media section -->
 <div class="card-image-wrapper card-gallery" style="${cardImgSrc ? `background-image: url('${cardImgSrc}');` : 'background: #090e1a;'}">
 ${cardImgSrc
-  ? `<img class="card-img" src="${cardImgSrc}" alt="${car.name}" loading="lazy">`
-  : `
-  <div class="card-image-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #0c1020; gap: 0.5rem;">
-  <span style="font-size: 2.2rem; filter: grayscale(0.2);">🏎️</span>
-  <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">No Photo</span>
-  </div>
-  `
+? `<img class="card-img" src="${cardImgSrc}" alt="${car.name}" loading="lazy">`
+: `
+<div class="card-image-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; background: #0c1020; gap: 0.5rem;">
+<span style="font-size: 2.2rem; filter: grayscale(0.2);">🏎️</span>
+<span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">No Photo</span>
+</div>
+`
 }
 <div class="card-image-glow"></div>
 <!-- State indicator overlays -->
 <span class="card-status-badge ${statusClass}">${car.status}</span>
 <!-- Badges Controls Overlay -->
 <div class="card-top-controls">
-  <button class="card-badge-btn ${car.loved ? 'active-love' : ''}"
-  onclick="toggleLoveCar('${car.id}', event)"
-  title="Favorite Love Status">
-  ❤️
-  </button>
-  <button class="card-badge-btn ${car.pinned ? 'active-pin' : ''}"
-  onclick="togglePinCar('${car.id}', event)"
-  title="Pin to Top of Showroom">
-  📌
-  </button>
+<button class="card-badge-btn ${car.loved ? 'active-love' : ''}"
+onclick="toggleLoveCar('${car.id}', event)"
+title="Favorite Love Status">
+❤️
+</button>
+<button class="card-badge-btn ${car.pinned ? 'active-pin' : ''}"
+onclick="togglePinCar('${car.id}', event)"
+title="Pin to Top of Showroom">
+📌
+</button>
 </div>
 </div>
 <!-- Info details contents -->
 <div class="card-content">
 <div class="card-tags">
-  <span class="card-tag">${car.segment}</span>
-  <span class="card-tag ${classTagStyle}">${classLabel}</span>
-  ${tagsHtml}
+<span class="card-tag">${car.segment}</span>
+<span class="card-tag ${classTagStyle}">${classLabel}</span>
+${tagsHtml}
 </div>
 <h2 class="card-title">${car.name}</h2>
 <div class="card-details">
-  <div class="detail-group">
-  <span class="detail-label">Manufacturer</span>
-  <span class="detail-value">${car.brand}</span>
-  </div>
-  <div class="detail-group" style="align-items: flex-end;">
-  <span class="detail-label">Market Value</span>
-  <span class="detail-value financial-value">${marketFormatted}</span>
-  </div>
+<div class="detail-group">
+<span class="detail-label">Manufacturer</span>
+<span class="detail-value">${car.brand}</span>
+</div>
+<div class="detail-group" style="align-items: flex-end;">
+<span class="detail-label">Market Value</span>
+<span class="detail-value financial-value">${marketFormatted}</span>
+</div>
 </div>
 </div>
 <!-- Trigger overlays actions -->
 <div class="card-actions">
 <button class="action-icon-btn btn-edit" onclick="openEditCarModal('${car.id}', event)" title="Modify details">
-  ✏️
+✏️
 </button>
 <button class="action-icon-btn btn-delete" onclick="deleteCarRecord('${car.id}', event)" title="Remove item">
-  🗑️
+🗑️
 </button>
 </div>
 </article>
