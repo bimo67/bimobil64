@@ -469,10 +469,13 @@ Add Diecast
 <input type="file" id="profile-input-file" class="form-control" accept="image/*" style="padding: 0.5rem;">
 </div>
 </div>
-<div class="form-footer">
-<button type="button" class="btn btn-secondary" id="btn-cancel-profile-form">Cancel</button>
-<button type="submit" class="btn btn-primary">Save Profile</button>
-</div>
+    <div class="form-footer" style="display: flex; justify-content: space-between; width: 100%;">
+    <button type="button" class="btn btn-secondary" id="btn-logout-profile" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171;">Logout</button>
+    <div style="display: flex; gap: 0.75rem;">
+      <button type="button" class="btn btn-secondary" id="btn-cancel-profile-form">Cancel</button>
+      <button type="submit" class="btn btn-primary">Save Profile</button>
+    </div>
+    </div>
 </form>
 </div>
 </div>
@@ -550,6 +553,38 @@ Add Diecast
 </div>
 <!-- Toast Notification Container -->
 <div class="toast-container" id="toast-container"></div>
+<!-- Auth Overlay (Login & Register) -->
+<div class="modal-overlay active" id="auth-overlay">
+<div class="modal-container" style="max-width: 400px; padding: 2rem; position: relative;">
+  <button class="modal-close" id="btn-close-auth-modal" style="position: absolute; top: 1rem; right: 1.25rem;">&times;</button>
+  <div style="text-align: center; margin-bottom: 1.5rem;">
+  <img src="images/logo.png" alt="BiMobil 64 Logo" style="height: 48px; width: auto; object-fit: contain; margin-bottom: 0.5rem; display: inline-block;" onerror="this.style.display='none'; document.getElementById('auth-logo-fallback').style.display='inline-block';" id="auth-logo-img">
+  <span id="auth-logo-fallback" style="font-size: 3rem; display: none;">🏎️</span>
+  <h2 class="modal-title" id="auth-title" style="margin-top: 0.5rem; font-family: var(--font-title); font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Login</h2>
+  <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem;">Please sign in to continue to your diecast showroom.</p>
+  </div>
+  <!-- Status / Alert Message Container -->
+  <div id="auth-alert" style="font-size: 0.85rem; padding: 0.5rem 0.75rem; border-radius: 8px; display: none; margin-bottom: 1rem; text-align: center; border: 1px solid transparent;"></div>
+  <form id="auth-form">
+  <div class="form-group">
+    <label class="form-label" for="auth-username">Username</label>
+    <input type="text" id="auth-username" class="form-control" placeholder="Enter username" required>
+  </div>
+  <div class="form-group" style="margin-bottom: 1.5rem;">
+    <label class="form-label" for="auth-password">Password</label>
+    <div style="position: relative; display: flex; align-items: center; width: 100%;">
+    <input type="password" id="auth-password" class="form-control" placeholder="Enter password" required style="padding-right: 2.5rem; width: 100%;">
+    <button type="button" id="btn-toggle-auth-password" style="position: absolute; right: 0.75rem; background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 1.1rem; padding: 0; outline: none;">👁️</button>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" id="btn-auth-submit" style="width: 100%; justify-content: center; padding: 0.8rem; margin-bottom: 1rem;">Login</button>
+  <div style="text-align: center; font-size: 0.85rem; color: var(--text-secondary);">
+    <span id="auth-switch-text">Don't have an account? </span>
+    <a href="#" id="btn-auth-switch" style="color: var(--accent-blue); text-decoration: none; font-weight: 700;">Register here</a>
+  </div>
+  </form>
+</div>
+</div>
 <!-- Application Script Hub -->
 <script>
 function getValidImages(car) {
@@ -678,74 +713,97 @@ const navBio = document.getElementById("nav-bio");
 const statInventory = document.getElementById("analytic-inventory");
 const statCapital = document.getElementById("analytic-capital");
 const statMarket = document.getElementById("analytic-market");
-function bootstrap() {
-const savedTags = localStorage.getItem("bimobil64_custom_tags");
-if (savedTags) {
-try { customTags = JSON.parse(savedTags); } catch (e) { customTags = [...defaultTags]; }
-} else {
-customTags = [...defaultTags];
-localStorage.setItem("bimobil64_custom_tags", JSON.stringify(customTags));
-}
-const savedProfile = localStorage.getItem("bimobil64_profile");
-if (savedProfile) {
-try { profile = JSON.parse(savedProfile); } catch (e) { profile = {...defaultProfile}; }
-} else {
-profile = {...defaultProfile};
-localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
-}
-const savedCurrency = localStorage.getItem("bimobil64_currency");
-if (savedCurrency) {
-currencyFormat = savedCurrency;
-} else {
-currencyFormat = "USD";
-localStorage.setItem("bimobil64_currency", currencyFormat);
-}
-currencyToggle.checked = (currencyFormat === "USD");
-const savedDiecasts = localStorage.getItem("bimobil64_diecasts");
-if (savedDiecasts) {
-try {
-diecasts = JSON.parse(savedDiecasts);
-let migrated = false;
-diecasts.forEach(item => {
-if (item.segment === "A Segment") {
-item.segment = "Hot Wheels";
-migrated = true;
-}
-if (item.status === "Koleksi" || item.status === "koleksi") {
-item.status = "Collection";
-migrated = true;
-}
-if (item.status === "Wishlist" || item.status === "wishlist") {
-item.status = "Bucket Lists";
-migrated = true;
-}
-if (item.image && (!item.images || item.images.length === 0)) {
-item.images = [item.image];
-migrated = true;
-}
-if (!item.class) {
-item.class = "Premium";
-migrated = true;
-}
-});
-if (migrated) {
-saveToLocalStorage();
-}
-} catch (e) {
-diecasts = [...defaultDiecasts];
-}
-} else {
-diecasts = [...defaultDiecasts];
-saveToLocalStorage();
-}
-setupGlobalEventListeners();
-updateProfileUI();
-updateCurrencyLabels();
-renderFilters();
-handleBrandChange();
-renderCatalogGrid();
-showToast("Showroom assets synchronized successfully!", "info");
-}
+  function getAccounts() {
+  const accountsStr = localStorage.getItem("bimobil64_accounts");
+  if (accountsStr) {
+    try { return JSON.parse(accountsStr); } catch (e) { return {}; }
+  }
+  return {};
+  }
+  function saveAccount(username, password) {
+  const accounts = getAccounts();
+  accounts[username] = password;
+  localStorage.setItem("bimobil64_accounts", JSON.stringify(accounts));
+  }
+  function loadUserData(username) {
+  const savedTags = localStorage.getItem(`bimobil64_user_${username}_custom_tags`);
+  if (savedTags) {
+    try { customTags = JSON.parse(savedTags); } catch (e) { customTags = [...defaultTags]; }
+  } else {
+    customTags = [...defaultTags];
+    localStorage.setItem(`bimobil64_user_${username}_custom_tags`, JSON.stringify(customTags));
+  }
+  const savedProfile = localStorage.getItem(`bimobil64_user_${username}_profile`);
+  if (savedProfile) {
+    try { profile = JSON.parse(savedProfile); } catch (e) { profile = {...defaultProfile}; }
+  } else {
+    profile = {...defaultProfile};
+    localStorage.setItem(`bimobil64_user_${username}_profile`, JSON.stringify(profile));
+  }
+  const savedCurrency = localStorage.getItem(`bimobil64_user_${username}_currency`);
+  if (savedCurrency) {
+    currencyFormat = savedCurrency;
+  } else {
+    currencyFormat = "USD";
+    localStorage.setItem(`bimobil64_user_${username}_currency`, currencyFormat);
+  }
+  currencyToggle.checked = (currencyFormat === "USD");
+  const savedDiecasts = localStorage.getItem(`bimobil64_user_${username}_diecasts`);
+  if (savedDiecasts) {
+    try {
+    diecasts = JSON.parse(savedDiecasts);
+    let migrated = false;
+    diecasts.forEach(item => {
+      if (item.segment === "A Segment") {
+      item.segment = "Hot Wheels";
+      migrated = true;
+      }
+      if (item.status === "Koleksi" || item.status === "koleksi") {
+      item.status = "Collection";
+      migrated = true;
+      }
+      if (item.status === "Wishlist" || item.status === "wishlist") {
+      item.status = "Bucket Lists";
+      migrated = true;
+      }
+      if (item.image && (!item.images || item.images.length === 0)) {
+      item.images = [item.image];
+      migrated = true;
+      }
+      if (!item.class) {
+      item.class = "Premium";
+      migrated = true;
+      }
+    });
+    if (migrated) {
+      saveToLocalStorage();
+    }
+    } catch (e) {
+    diecasts = [...defaultDiecasts];
+    }
+  } else {
+    diecasts = [...defaultDiecasts];
+    saveToLocalStorage();
+  }
+  updateProfileUI();
+  updateCurrencyLabels();
+  renderFilters();
+  handleBrandChange();
+  renderCatalogGrid();
+  }
+  function bootstrap() {
+  setupGlobalEventListeners();
+  const currentUser = localStorage.getItem("bimobil64_current_user") || sessionStorage.getItem("bimobil64_current_user");
+  if (currentUser) {
+    const authOverlay = document.getElementById("auth-overlay");
+    if (authOverlay) authOverlay.classList.remove("active");
+    loadUserData(currentUser);
+    showToast("Welcome back!", "success");
+  } else {
+    const authOverlay = document.getElementById("auth-overlay");
+    if (authOverlay) authOverlay.classList.add("active");
+  }
+  }
 function setupGlobalEventListeners() {
 searchBox.addEventListener("input", (e) => {
 searchQuery = e.target.value.toLowerCase().trim();
@@ -754,7 +812,12 @@ renderCatalogGrid();
 currencyToggle.addEventListener("change", (e) => {
 const oldCurrency = currencyFormat;
 currencyFormat = e.target.checked ? "USD" : "IDR";
+const currentUser = localStorage.getItem("bimobil64_current_user") || sessionStorage.getItem("bimobil64_current_user");
+if (currentUser) {
+localStorage.setItem(`bimobil64_user_${currentUser}_currency`, currencyFormat);
+} else {
 localStorage.setItem("bimobil64_currency", currencyFormat);
+}
 updateCurrencyLabels();
 convertOpenFormPriceFields(oldCurrency, currencyFormat);
 updateAnalyticsValues();
@@ -854,7 +917,12 @@ return;
 profile.name = nameVal;
 profile.bio = bioVal;
 profile.avatar = profileAvatarBase64 ? profileAvatarBase64 : avatarUrlVal;
+const currentUser = localStorage.getItem("bimobil64_current_user") || sessionStorage.getItem("bimobil64_current_user");
+if (currentUser) {
+localStorage.setItem(`bimobil64_user_${currentUser}_profile`, JSON.stringify(profile));
+} else {
 localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
+}
 updateProfileUI();
 resetProfileFormState();
 profileModalOverlay.classList.remove("active");
@@ -897,6 +965,127 @@ btnShareSpecs.addEventListener("click", copySpecificationCard);
 btnExportJson.addEventListener("click", exportShowroomJSON);
 btnImportJsonTrigger.addEventListener("click", () => importJsonInput.click());
 importJsonInput.addEventListener("change", importShowroomJSON);
+function showAuthAlert(message, type = "error") {
+const alertEl = document.getElementById("auth-alert");
+if (!alertEl) return;
+alertEl.textContent = message;
+alertEl.style.display = "block";
+if (type === "success") {
+alertEl.style.color = "var(--status-collection)";
+alertEl.style.background = "rgba(16, 185, 129, 0.1)";
+alertEl.style.borderColor = "rgba(16, 185, 129, 0.2)";
+} else {
+alertEl.style.color = "var(--status-sold)";
+alertEl.style.background = "rgba(239, 68, 68, 0.1)";
+alertEl.style.borderColor = "rgba(239, 68, 68, 0.2)";
+}
+}
+function hideAuthAlert() {
+const alertEl = document.getElementById("auth-alert");
+if (alertEl) alertEl.style.display = "none";
+}
+let isRegisterMode = false;
+const authForm = document.getElementById("auth-form");
+const btnAuthSwitch = document.getElementById("btn-auth-switch");
+const authTitle = document.getElementById("auth-title");
+const btnAuthSubmit = document.getElementById("btn-auth-submit");
+const authSwitchText = document.getElementById("auth-switch-text");
+if (btnAuthSwitch) {
+btnAuthSwitch.addEventListener("click", (e) => {
+e.preventDefault();
+hideAuthAlert();
+isRegisterMode = !isRegisterMode;
+if (isRegisterMode) {
+authTitle.textContent = "BiMobil 64 Register";
+btnAuthSubmit.textContent = "Register";
+authSwitchText.textContent = "Already have an account? ";
+btnAuthSwitch.textContent = "Login here";
+} else {
+authTitle.textContent = "Login";
+btnAuthSubmit.textContent = "Login";
+authSwitchText.textContent = "Don't have an account? ";
+btnAuthSwitch.textContent = "Register here";
+}
+});
+}
+if (authForm) {
+authForm.addEventListener("submit", (e) => {
+e.preventDefault();
+hideAuthAlert();
+const username = document.getElementById("auth-username").value.trim().toLowerCase();
+const password = document.getElementById("auth-password").value;
+if (!username || !password) {
+showAuthAlert("Please fill in all fields", "error");
+return;
+}
+const accounts = getAccounts();
+if (isRegisterMode) {
+if (accounts[username]) {
+showAuthAlert("Username already registered!", "error");
+return;
+}
+saveAccount(username, password);
+showAuthAlert("Registration successful! Logging in...", "success");
+isRegisterMode = false;
+setTimeout(() => {
+localStorage.setItem("bimobil64_current_user", username);
+const authOverlay = document.getElementById("auth-overlay");
+if (authOverlay) authOverlay.classList.remove("active");
+authForm.reset();
+loadUserData(username);
+}, 1000);
+} else {
+if (!accounts[username]) {
+showAuthAlert("Account not registered yet. Please register first.", "error");
+return;
+}
+if (accounts[username] !== password) {
+showAuthAlert("Incorrect password!", "error");
+return;
+}
+showToast("Login successful!", "success");
+localStorage.setItem("bimobil64_current_user", username);
+const authOverlay = document.getElementById("auth-overlay");
+if (authOverlay) authOverlay.classList.remove("active");
+authForm.reset();
+loadUserData(username);
+}
+});
+}
+const btnToggleAuthPassword = document.getElementById("btn-toggle-auth-password");
+const authPasswordInput = document.getElementById("auth-password");
+if (btnToggleAuthPassword && authPasswordInput) {
+btnToggleAuthPassword.addEventListener("click", () => {
+if (authPasswordInput.type === "password") {
+authPasswordInput.type = "text";
+btnToggleAuthPassword.textContent = "🙈";
+} else {
+authPasswordInput.type = "password";
+btnToggleAuthPassword.textContent = "👁️";
+}
+});
+}
+const btnCloseAuthModal = document.getElementById("btn-close-auth-modal");
+if (btnCloseAuthModal) {
+btnCloseAuthModal.addEventListener("click", () => {
+const authOverlay = document.getElementById("auth-overlay");
+if (authOverlay) authOverlay.classList.remove("active");
+});
+}
+const btnLogoutProfile = document.getElementById("btn-logout-profile");
+if (btnLogoutProfile) {
+btnLogoutProfile.addEventListener("click", () => {
+if (confirm("Are you sure you want to log out?")) {
+localStorage.removeItem("bimobil64_current_user");
+profileModalOverlay.classList.remove("active");
+const authOverlay = document.getElementById("auth-overlay");
+if (authOverlay) authOverlay.classList.add("active");
+diecasts = [];
+renderCatalogGrid();
+showToast("Logged out successfully!", "info");
+}
+});
+}
 }
 function updateProfileUI() {
 navAvatar.src = profile.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80";
@@ -1086,7 +1275,12 @@ showToast("This tag filter already exists!", "warning");
 return;
 }
 customTags.push(cleanedTag);
+const currentUser = localStorage.getItem("bimobil64_current_user") || sessionStorage.getItem("bimobil64_current_user");
+if (currentUser) {
+localStorage.setItem(`bimobil64_user_${currentUser}_custom_tags`, JSON.stringify(customTags));
+} else {
 localStorage.setItem("bimobil64_custom_tags", JSON.stringify(customTags));
+}
 renderFilters();
 showToast(`New custom tag filter #${cleanedTag} injected!`, "success");
 }
@@ -1252,9 +1446,14 @@ resetForm();
 renderFilters();
 renderCatalogGrid();
 }
-function saveToLocalStorage() {
-localStorage.setItem("bimobil64_diecasts", JSON.stringify(diecasts));
-}
+  function saveToLocalStorage() {
+  const currentUser = localStorage.getItem("bimobil64_current_user") || sessionStorage.getItem("bimobil64_current_user");
+  if (currentUser) {
+    localStorage.setItem(`bimobil64_user_${currentUser}_diecasts`, JSON.stringify(diecasts));
+  } else {
+    localStorage.setItem("bimobil64_diecasts", JSON.stringify(diecasts));
+  }
+  }
 window.openEditCarModal = function(id, e) {
 if (e) e.stopPropagation();
 const car = diecasts.find(c => c.id === id);
@@ -1493,9 +1692,16 @@ currencyFormat = importedObj.currencyFormat;
 currencyToggle.checked = (currencyFormat === "USD");
 }
 saveToLocalStorage();
+const currentUser = localStorage.getItem("bimobil64_current_user") || sessionStorage.getItem("bimobil64_current_user");
+if (currentUser) {
+localStorage.setItem(`bimobil64_user_${currentUser}_profile`, JSON.stringify(profile));
+localStorage.setItem(`bimobil64_user_${currentUser}_custom_tags`, JSON.stringify(customTags));
+localStorage.setItem(`bimobil64_user_${currentUser}_currency`, currencyFormat);
+} else {
 localStorage.setItem("bimobil64_profile", JSON.stringify(profile));
 localStorage.setItem("bimobil64_custom_tags", JSON.stringify(customTags));
 localStorage.setItem("bimobil64_currency", currencyFormat);
+}
 updateProfileUI();
 updateCurrencyLabels();
 renderFilters();
